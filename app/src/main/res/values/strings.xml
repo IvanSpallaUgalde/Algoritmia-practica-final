@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Practica Final</string>
+    <string name="palabras_partida">Has encertat 0 de 0 posibles</string>
+    <string name="BTN_send">Send</string>
+    <string name="BTN_clear">Clear</string>
+    <string name="palabra">PALABRA</string>
 </resources>

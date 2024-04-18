@@ -7,13 +7,117 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <TextView
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/BTpalabras_partida"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.05882353" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/BTpalabra"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.62" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/TPpalabra"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.55" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/LFcircle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.15" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/RGCircle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.85" />
+
+    <TextView
+        android:id="@+id/palabras_partida"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/palabras_partida"
+        app:layout_constraintBottom_toTopOf="@+id/BTpalabras_partida"
+        app:layout_constraintStart_toStartOf="@+id/LFpalabras_partida" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/LFpalabras_partida"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.05109489" />
+
+    <Button
+        android:id="@+id/BTNClear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/BTN_clear"
+        app:layout_constraintBottom_toTopOf="@+id/BTpalabra"
+        app:layout_constraintEnd_toStartOf="@+id/clearPalabra"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/TPpalabra" />
+
+    <TextView
+        android:id="@+id/TVpalabra"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/palabra"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/BTpalabra"
+        app:layout_constraintEnd_toStartOf="@+id/palabraSend"
+        app:layout_constraintStart_toStartOf="@+id/clearPalabra"
+        app:layout_constraintTop_toTopOf="@+id/TPpalabra" />
+
+    <Button
+        android:id="@+id/BTNsend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/BTN_send"
+        app:layout_constraintBottom_toTopOf="@+id/BTpalabra"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/palabraSend"
+        app:layout_constraintTop_toTopOf="@+id/TPpalabra" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/clearPalabra"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.31" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/palabraSend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.69" />
+
+    <Button
+        android:id="@+id/button4"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Button"
+        app:layout_constraintEnd_toStartOf="@+id/LFcircle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/BTpalabra" />
+
+    <Button
+        android:id="@+id/button5"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/LFcircle"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
