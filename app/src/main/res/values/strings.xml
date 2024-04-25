@@ -4,10 +4,10 @@
     <string name="BTN_send">Send</string>
     <string name="BTN_clear">Clear</string>
     <string name="palabra">PALABRA</string>
-    <string name="help"> </string>
-    <string name="random"> </string>
+    <string name="help" />
+    <string name="random" />
     <string name="bonus">0</string>
-    <string name="reset"> </string>
+    <string name="reset" />
     <string name="sample_letter">A</string>
     <string name="default_void" />
 </resources>
