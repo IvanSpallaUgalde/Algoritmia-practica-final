@@ -65,7 +65,9 @@
         app:layout_constraintBottom_toTopOf="@+id/BTpalabra"
         app:layout_constraintEnd_toStartOf="@+id/clearPalabra"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/TPpalabra" />
+        app:layout_constraintTop_toTopOf="@+id/TPpalabra"
+        android:background=""
+        />
 
     <TextView
         android:id="@+id/TVpalabra"
@@ -86,7 +88,9 @@
         app:layout_constraintBottom_toTopOf="@+id/BTpalabra"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/palabraSend"
-        app:layout_constraintTop_toTopOf="@+id/TPpalabra" />
+        app:layout_constraintTop_toTopOf="@+id/TPpalabra"
+        android:background=""
+        />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/clearPalabra"
@@ -103,21 +107,63 @@
         app:layout_constraintGuide_percent="0.69" />
 
     <Button
-        android:id="@+id/button4"
+        android:id="@+id/rngBTN"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Button"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline2"
         app:layout_constraintEnd_toStartOf="@+id/LFcircle"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/BTpalabra" />
 
     <Button
-        android:id="@+id/button5"
+        android:id="@+id/bonusBTN"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Button"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/LFcircle"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline" />
+
+    <Button
+        android:id="@+id/helpBTN"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/RGCircle"
+        app:layout_constraintTop_toTopOf="@+id/BTpalabra" />
+
+    <Button
+        android:id="@+id/restartBTN"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/RGCircle"
+        app:layout_constraintTop_toTopOf="@+id/guideline" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.879617" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.7373461" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/RGCircle"
+        app:layout_constraintStart_toStartOf="@+id/LFcircle"
+        app:layout_constraintTop_toTopOf="@+id/BTpalabra"
+        app:srcCompat="@drawable/circle" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
