@@ -8,6 +8,9 @@
     <string name="random" />
     <string name="bonus">0</string>
     <string name="reset" />
-    <string name="sample_letter">A</string>
+    <string name="a">A</string>
+    <string name="b">B</string>
+    <string name="c">C</string>
+    <string name="d">D</string>
     <string name="default_void" />
 </resources>
