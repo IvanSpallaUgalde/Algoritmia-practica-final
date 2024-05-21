@@ -18,13 +18,6 @@ import java.util.Random;
 public class MainActivity extends AppCompatActivity {
 
     private List<Button> btnList = new ArrayList<>();
-    private Button letra1;
-    private Button letra2;
-    private Button letra3;
-    private Button letra4;
-    private Button letra5;
-    private Button letra6;
-    private Button letra7;
 
     private TextView TVpalabra;
 
