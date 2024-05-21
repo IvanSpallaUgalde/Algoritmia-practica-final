@@ -6,6 +6,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -18,6 +19,17 @@ import java.util.Random;
 public class MainActivity extends AppCompatActivity {
 
     private List<Button> btnList = new ArrayList<>();
+    private Button letra1;
+    private Button letra2;
+    private Button letra3;
+    private Button letra4;
+    private Button letra5;
+    private Button letra6;
+    private Button letra7;
+
+    private int totalParaules;
+
+    private int totalEncertades;
 
     private TextView TVpalabra;
 
@@ -128,5 +140,27 @@ public class MainActivity extends AppCompatActivity {
             arr[i] = arr[j];
             arr[j] = temp;
         }
+    }
+
+    public void bonusBTN(View view){
+        // Definicio de valors temporal, una vegada creada la logica del joc s'eliminaran aquestes linies
+        totalEncertades = 0;
+        totalParaules = 0;
+
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        // Titol del AlertDialog amb la progresio de paraules encertades
+        builder.setTitle("Encertades ("+totalEncertades+" de "+totalParaules+"):");
+
+        // Text del AlertDialog que mes endevant es cambiara per una llista ordenada alfabetiment de les paraules
+        builder.setMessage("INSERTAR LISTA DE PALABRAS ORDENADAS ALFABETICAMENTE");
+
+        // Un boto Ok per tancar la finestra
+        builder.setPositiveButton("OK", null);
+
+        // Mostrar el AlertDialog per pantalla
+        AlertDialog dialog =  builder.create();
+        dialog.show();
     }
 }
