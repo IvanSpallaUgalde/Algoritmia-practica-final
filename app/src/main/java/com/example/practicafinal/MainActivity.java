@@ -124,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // Funcio de randomitzacio de Fisher-Yates per reordenar les lletres dels botons
     public void randomize(String[] arr, int n){
         // Creating a object for Random class
         Random r = new Random();
@@ -142,6 +143,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // Quan s'implementi la logica del programa informara de quantes paraules s'han encertat i
+    // llistarles
     public void bonusBTN(View view){
         // Definicio de valors temporal, una vegada creada la logica del joc s'eliminaran aquestes linies
         totalEncertades = 0;
