@@ -227,5 +227,23 @@ public class MainActivity extends AppCompatActivity {
 
         return linea;
     }
+    // Método para mostrar la palabra en una posición específica: P2
+    private void mostraParaula(String s, int posicio) {
+        if (posicio >= 0 && posicio < hiddenWords.length) {
+            hiddenWords[posicio].setText(s);
+        } else {
+            throw new IllegalArgumentException("Posición fuera de rango");
+        }
+    }
 
+    // Método para mostrar la primera letra en una posición específica
+    private void mostraPrimeraLletra(String s, int posicio) {
+        if (posicio >= 0 && posicio < hiddenWords.length) {
+            char primeraLletra = Character.toLowerCase(s.charAt(0));
+            hiddenWords[posicio].setText(String.valueOf(primeraLletra));
+           // setVisibilityLetra(View.VISIBLE, primeraLletra; mejor en el botón ayuda donde se llama a este método
+        } else {
+            throw new IllegalArgumentException("Posición fuera de rango");
+        }
+    }
 }
