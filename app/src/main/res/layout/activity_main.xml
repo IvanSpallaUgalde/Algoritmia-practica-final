@@ -189,7 +189,7 @@
         app:layout_constraintGuide_percent="0.7" />
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/circle"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:contentDescription="@string/default_void"
@@ -386,5 +386,47 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.66" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/botWordsGuide"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.500684" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/topWordGuides"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.12311901" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/firstGuide"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.19699043" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/secondGuide"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.2735978" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/thirdGuide"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.3488372" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/fourthGuide"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.42407662" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

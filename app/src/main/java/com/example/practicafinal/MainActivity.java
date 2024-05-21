@@ -1,13 +1,17 @@
 package com.example.practicafinal;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.Guideline;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -18,7 +22,18 @@ import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
+    //region Llistes
+    // Llista de botons del cercle
     private List<Button> btnList = new ArrayList<>();
+    // Llista de guidelines de la seccio de paraules
+    private List<Guideline> wordGuides = new ArrayList<>();
+    // Lliste dels arrays de TextViews del panel de Paraules
+    private List<TextView[]> panelParaules = new ArrayList<>();
+    //endregion
+
+    //region Variables
+    private ConstraintLayout main;
+    private int colour;
     private Button letra1;
     private Button letra2;
     private Button letra3;
@@ -35,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
     // Numero de letras de la partida
     private int numLetras = 4;
+    //endregion
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +63,10 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
+        colour = Color.rgb(255,100,30);
+
+        main = findViewById(R.id.main);
+
         btnList.add(letra1 = findViewById(R.id.letra1));
         btnList.add(letra2 = findViewById(R.id.letra2));
         btnList.add(letra3 = findViewById(R.id.letra3));
@@ -54,6 +74,14 @@ public class MainActivity extends AppCompatActivity {
         btnList.add(letra5 = findViewById(R.id.letra5));
         btnList.add(letra6 = findViewById(R.id.letra6));
         btnList.add(letra7 = findViewById(R.id.letra7));
+
+        // Llista de guies per la creacio del panel de paraules
+        wordGuides.add(findViewById(R.id.topWordGuides));
+        wordGuides.add(findViewById(R.id.firstGuide));
+        wordGuides.add(findViewById(R.id.secondGuide));
+        wordGuides.add(findViewById(R.id.thirdGuide));
+        wordGuides.add(findViewById(R.id.fourthGuide));
+        wordGuides.add(findViewById(R.id.botWordsGuide));
 
         TVpalabra = findViewById(R.id.TVpalabra);
 
@@ -68,6 +96,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Vaciar texto del TextView
         TVpalabra.setText("");
+        setColors();
     }
 
     public void setVisibilityLetra(int mode, Button btn){
@@ -166,4 +195,37 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog dialog =  builder.create();
         dialog.show();
     }
+
+    public void setColors(){
+        Button aux;
+        for(int i = 0; i < btnList.size(); i++){
+            aux = btnList.get(i);
+            aux.setBackgroundColor(colour);
+        }
+        ImageView circle = findViewById(R.id.circle);
+        circle.setBackgroundColor(colour);
+    }
+
+    public TextView[] crearFilaTextViews(int guia, int lletres){
+        TextView[] linea = new TextView[lletres];
+        for (int i = 0; i < lletres; i++){
+            TextView letter = new TextView(this);
+
+            // Afegir un ID
+            int id = View.generateViewId();
+            letter.setId(id);
+
+            // Afegir el text
+            letter.setText("");
+
+            // Afegir color (el mateix que el cercle)
+            letter.setBackgroundColor(colour);
+
+            // Posar el TextView dins el Layout
+            main.addView(letter);
+    }
+
+        return linea;
+    }
+
 }
