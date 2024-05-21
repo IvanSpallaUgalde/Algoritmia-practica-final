@@ -97,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void randomBTN(View view){
         clear();
+
         String[] aux = new String[numLetras];
         for (int i = 0; i < numLetras; i++){
             Button b = btnList.get(i);
