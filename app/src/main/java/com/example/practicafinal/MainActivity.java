@@ -100,7 +100,12 @@ public class MainActivity extends AppCompatActivity {
         TVpalabra.setText("");
         setColors();
 
-        hiddenWords.add(crearFilaTextViews(1, 4));
+        // Crear las filas de TextViews para las palabras ocultas para testear
+        hiddenWords.add(crearFilaTextViews(1, 3));
+        hiddenWords.add(crearFilaTextViews(2, 4));
+        hiddenWords.add(crearFilaTextViews(3, 5));
+        hiddenWords.add(crearFilaTextViews(4, 6));
+        hiddenWords.add(crearFilaTextViews(5, 7));
     }
 
     public void setVisibilityLetra(int mode, Button btn){
@@ -258,7 +263,7 @@ public class MainActivity extends AppCompatActivity {
             letter.setId(id);
 
             // Afegir el text
-            letter.setText("B");
+            letter.setText("");
             letter.setTextSize(38);
             letter.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
             letter.setTextColor(Color.BLACK);
