@@ -2,6 +2,7 @@ package com.example.practicafinal;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -11,6 +12,7 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.constraintlayout.widget.Guideline;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -90,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
             setVisibilityLetra(View.GONE, btnList.get(i));
         }
 
-        for (int i = 0; i < numLetras; i++){
+        for (int i = 0; i < btnList.size(); i++){
             setVisibilityLetra(View.VISIBLE, btnList.get(i));
         }
 
@@ -172,8 +174,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // Quan s'implementi la logica del programa informara de quantes paraules s'han encertat i
-    // llistarles
+    // Quan s'implementi la logica del programa informara de quantes paraules s'han encertat i llistarles
     public void bonusBTN(View view){
         // Definicio de valors temporal, una vegada creada la logica del joc s'eliminaran aquestes linies
         totalEncertades = 0;
@@ -198,17 +199,35 @@ public class MainActivity extends AppCompatActivity {
 
     public void setColors(){
         Button aux;
-        for(int i = 0; i < btnList.size(); i++){
-            aux = btnList.get(i);
-            aux.setBackgroundColor(colour);
-        }
         ImageView circle = findViewById(R.id.circle);
         circle.setBackgroundColor(colour);
     }
 
+    public void testing(View view){
+        int i = 1;
+        int l = 4;
+        TextView[] aux = crearFilaTextViews(i,l);
+    }
+
     public TextView[] crearFilaTextViews(int guia, int lletres){
         TextView[] linea = new TextView[lletres];
-        for (int i = 0; i < lletres; i++){
+        for (int i = 0; i < linea.length; i++){
+            // Obtenir les metriques de la pantalla
+            DisplayMetrics metrics = new DisplayMetrics();
+            getWindowManager().getDefaultDisplay().getMetrics(metrics);
+            int scrWidth = metrics.widthPixels;
+            int scrHeight = metrics.heightPixels;
+
+            // Margin Y
+            double altura = scrHeight * 0.00293571;
+
+            // Width TextView
+            double width = scrHeight * 0.068;
+            double widthMargin = (scrWidth - (lletres*width))/2;
+            int finalWMargin = (int) widthMargin;
+
+
+            // Crear el array de TextView
             TextView letter = new TextView(this);
 
             // Afegir un ID
@@ -223,10 +242,36 @@ public class MainActivity extends AppCompatActivity {
 
             // Posar el TextView dins el Layout
             main.addView(letter);
-    }
+
+            // Afegir les constraints al TextView
+            ConstraintSet constraintSet = new ConstraintSet();
+
+            // Afegim el constraint horizontals del TextView
+            if (i == 0){ // Pirmer TextView
+                constraintSet.connect(id, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START, finalWMargin);
+            } else if (i < linea.length-1){  // Qualsevol TextView menos el primer i el darrer
+                constraintSet.connect(id, ConstraintSet.START, linea[i-1].getId(), ConstraintSet.END, 0);
+                constraintSet.connect(linea[i-1].getId(), ConstraintSet.END, id, ConstraintSet.START, 0);
+            } else { // Darrer TextView
+                constraintSet.connect(linea[i-1].getId(), ConstraintSet.END, id, ConstraintSet.START, 0);
+                constraintSet.connect(id, ConstraintSet.START, linea[i-1].getId(), ConstraintSet.END, 0);
+                constraintSet.connect(id, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END, finalWMargin);
+            }
+
+            // Afegim el constraint vertical del TextView
+            constraintSet.connect(id, ConstraintSet.TOP, wordGuides.get(guia-1).getId(), ConstraintSet.TOP);
+            constraintSet.connect(id, ConstraintSet.BOTTOM, wordGuides.get(guia).getId(), ConstraintSet.TOP);
+
+            // Aplicar les restriccions
+            constraintSet.applyTo(main);
+
+            linea[i] = letter;
+        }
 
         return linea;
     }
+
+    /*
     // Método para mostrar la palabra en una posición específica: P2
     private void mostraParaula(String s, int posicio) {
         if (posicio >= 0 && posicio < hiddenWords.length) {
@@ -246,4 +291,5 @@ public class MainActivity extends AppCompatActivity {
             throw new IllegalArgumentException("Posición fuera de rango");
         }
     }
+    */
 }
