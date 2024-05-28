@@ -29,8 +29,8 @@ public class MainActivity extends AppCompatActivity {
     private List<Button> btnList = new ArrayList<>();
     // Llista de guidelines de la seccio de paraules
     private List<Guideline> wordGuides = new ArrayList<>();
-    // Lliste dels arrays de TextViews del panel de Paraules
-    private List<TextView[]> panelParaules = new ArrayList<>();
+    // Llista de arrays de TextViews per a les paraules ocultes
+    private List<TextView[]> hiddenWords = new ArrayList<>();
     //endregion
 
     //region Variables
@@ -200,33 +200,55 @@ public class MainActivity extends AppCompatActivity {
     public void setColors(){
         Button aux;
         ImageView circle = findViewById(R.id.circle);
-        circle.setBackgroundColor(colour);
     }
 
-    public void testing(View view){
-        int i = 1;
-        int l = 4;
-        TextView[] aux = crearFilaTextViews(i,l);
+    public void test(View view){
+        /*
+        // Crear un array de TextViews
+        TextView aux = new TextView(this);
+        aux.setId(View.generateViewId());
+        aux.setTextColor(Color.BLACK);
+        aux.setText("A");
+        aux.setTextSize(40);
+        aux.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        aux.setBackgroundColor(colour);
+        aux.setVisibility(View.VISIBLE);
+
+        main.addView(aux);
+
+        ConstraintSet constraintSet = new ConstraintSet();
+        // Afegim el constraint vertical del TextView
+        constraintSet.connect(aux.getId(), ConstraintSet.TOP, wordGuides.get(1-1).getId(), ConstraintSet.TOP);
+        constraintSet.connect(aux.getId(), ConstraintSet.BOTTOM, wordGuides.get(1).getId(), ConstraintSet.TOP);
+
+        constraintSet.connect(aux.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START, 120);
+        constraintSet.connect(aux.getId(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END, 120);
+
+        constraintSet.applyTo(main);
+        */
+        hiddenWords.add(crearFilaTextViews(1, 4));
     }
 
     public TextView[] crearFilaTextViews(int guia, int lletres){
         TextView[] linea = new TextView[lletres];
+
+        // Obtenir les metriques de la pantalla
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        int scrWidth = metrics.widthPixels;
+        int scrHeight = metrics.heightPixels;
+
+        // Margin Y
+        double altura = scrHeight * 0.00293571;
+
+        // Width TextView
+        double width = scrHeight * 0.068;
+        double widthMargin = (scrWidth - (lletres*width))/2;
+
+        // Margin X
+        int finalWMargin = (int) widthMargin;
+
         for (int i = 0; i < linea.length; i++){
-            // Obtenir les metriques de la pantalla
-            DisplayMetrics metrics = new DisplayMetrics();
-            getWindowManager().getDefaultDisplay().getMetrics(metrics);
-            int scrWidth = metrics.widthPixels;
-            int scrHeight = metrics.heightPixels;
-
-            // Margin Y
-            double altura = scrHeight * 0.00293571;
-
-            // Width TextView
-            double width = scrHeight * 0.068;
-            double widthMargin = (scrWidth - (lletres*width))/2;
-            int finalWMargin = (int) widthMargin;
-
-
             // Crear el array de TextView
             TextView letter = new TextView(this);
 
@@ -235,10 +257,14 @@ public class MainActivity extends AppCompatActivity {
             letter.setId(id);
 
             // Afegir el text
-            letter.setText("");
+            letter.setText("A");
+            letter.setTextSize(40);
+            letter.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            letter.setTextColor(Color.BLACK);
 
             // Afegir color (el mateix que el cercle)
             letter.setBackgroundColor(colour);
+            letter.setVisibility(View.VISIBLE);
 
             // Posar el TextView dins el Layout
             main.addView(letter);
@@ -248,14 +274,14 @@ public class MainActivity extends AppCompatActivity {
 
             // Afegim el constraint horizontals del TextView
             if (i == 0){ // Pirmer TextView
-                constraintSet.connect(id, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START, finalWMargin);
+                constraintSet.connect(id, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START, 300);
             } else if (i < linea.length-1){  // Qualsevol TextView menos el primer i el darrer
-                constraintSet.connect(id, ConstraintSet.START, linea[i-1].getId(), ConstraintSet.END, 0);
+                constraintSet.connect(id, ConstraintSet.START, linea[i-1].getId(), ConstraintSet.END, 5);
                 constraintSet.connect(linea[i-1].getId(), ConstraintSet.END, id, ConstraintSet.START, 0);
             } else { // Darrer TextView
-                constraintSet.connect(linea[i-1].getId(), ConstraintSet.END, id, ConstraintSet.START, 0);
+                constraintSet.connect(linea[i-1].getId(), ConstraintSet.END, id, ConstraintSet.START, 5);
                 constraintSet.connect(id, ConstraintSet.START, linea[i-1].getId(), ConstraintSet.END, 0);
-                constraintSet.connect(id, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END, finalWMargin);
+                constraintSet.connect(id, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END, 300);
             }
 
             // Afegim el constraint vertical del TextView
