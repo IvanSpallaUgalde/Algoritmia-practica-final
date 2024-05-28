@@ -99,6 +99,8 @@ public class MainActivity extends AppCompatActivity {
         // Vaciar texto del TextView
         TVpalabra.setText("");
         setColors();
+
+        hiddenWords.add(crearFilaTextViews(1, 4));
     }
 
     public void setVisibilityLetra(int mode, Button btn){
@@ -106,8 +108,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void sendBTN(View view){
-        // De forma temporal este boton añadira un texto al TextView palabra
-        TVpalabra.setText("PRUEBA");
+        // De forma temporal este boton hara lo mismo que clear
+        clear();
     }
 
     public void clearBTN(View view){
@@ -226,7 +228,6 @@ public class MainActivity extends AppCompatActivity {
 
         constraintSet.applyTo(main);
         */
-        hiddenWords.add(crearFilaTextViews(1, 4));
     }
 
     public TextView[] crearFilaTextViews(int guia, int lletres){
@@ -257,13 +258,14 @@ public class MainActivity extends AppCompatActivity {
             letter.setId(id);
 
             // Afegir el text
-            letter.setText("A");
-            letter.setTextSize(40);
+            letter.setText("B");
+            letter.setTextSize(38);
             letter.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
             letter.setTextColor(Color.BLACK);
+            letter.setBackgroundResource(R.drawable.textview_border);
 
             // Afegir color (el mateix que el cercle)
-            letter.setBackgroundColor(colour);
+            //letter.setBackgroundColor(colour);
             letter.setVisibility(View.VISIBLE);
 
             // Posar el TextView dins el Layout
@@ -274,20 +276,21 @@ public class MainActivity extends AppCompatActivity {
 
             // Afegim el constraint horizontals del TextView
             if (i == 0){ // Pirmer TextView
-                constraintSet.connect(id, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START, 300);
+                constraintSet.connect(id, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START, finalWMargin);
             } else if (i < linea.length-1){  // Qualsevol TextView menos el primer i el darrer
-                constraintSet.connect(id, ConstraintSet.START, linea[i-1].getId(), ConstraintSet.END, 5);
-                constraintSet.connect(linea[i-1].getId(), ConstraintSet.END, id, ConstraintSet.START, 0);
-            } else { // Darrer TextView
-                constraintSet.connect(linea[i-1].getId(), ConstraintSet.END, id, ConstraintSet.START, 5);
                 constraintSet.connect(id, ConstraintSet.START, linea[i-1].getId(), ConstraintSet.END, 0);
-                constraintSet.connect(id, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END, 300);
+            } else { // Darrer TextView
+                constraintSet.connect(id, ConstraintSet.START, linea[i-1].getId(), ConstraintSet.END, 0);
+                constraintSet.connect(id, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END, finalWMargin);
             }
 
             // Afegim el constraint vertical del TextView
-            constraintSet.connect(id, ConstraintSet.TOP, wordGuides.get(guia-1).getId(), ConstraintSet.TOP);
-            constraintSet.connect(id, ConstraintSet.BOTTOM, wordGuides.get(guia).getId(), ConstraintSet.TOP);
+            constraintSet.connect(id, ConstraintSet.TOP, wordGuides.get(guia-1).getId(), ConstraintSet.TOP, 5);
+            constraintSet.connect(id, ConstraintSet.BOTTOM, wordGuides.get(guia).getId(), ConstraintSet.TOP, 5);
 
+            // Definim les dimensions
+            constraintSet.constrainWidth(id, (int) width);
+            constraintSet.constrainHeight(id, (int) width);
             // Aplicar les restriccions
             constraintSet.applyTo(main);
 
@@ -297,19 +300,20 @@ public class MainActivity extends AppCompatActivity {
         return linea;
     }
 
-    /*
+
     // Método para mostrar la palabra en una posición específica: P2
     private void mostraParaula(String s, int posicio) {
-        if (posicio >= 0 && posicio < hiddenWords.length) {
-            hiddenWords[posicio].setText(s);
+        if (posicio >= 0 && posicio < hiddenWords.size()){
+            TextView aux = hiddenWords.get(posicio)[0];
+            aux.setText(s);
         } else {
             throw new IllegalArgumentException("Posición fuera de rango");
         }
     }
 
     // Método para mostrar la primera letra en una posición específica
-    private void mostraPrimeraLletra(String s, int posicio) {
-        if (posicio >= 0 && posicio < hiddenWords.length) {
+    /*private void mostraPrimeraLletra(String s, int posicio) {
+        if (posicio >= 0 && posicio < hiddenWords.size()) {
             char primeraLletra = Character.toLowerCase(s.charAt(0));
             hiddenWords[posicio].setText(String.valueOf(primeraLletra));
            // setVisibilityLetra(View.VISIBLE, primeraLletra; mejor en el botón ayuda donde se llama a este método
