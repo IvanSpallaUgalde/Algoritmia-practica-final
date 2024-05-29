@@ -8,4 +8,8 @@ public class Word {
         Accentuada = accentuada;
         Raw = raw;
     }
+
+    public int getLongitud() {
+        return Raw.length();
+    }
 }
