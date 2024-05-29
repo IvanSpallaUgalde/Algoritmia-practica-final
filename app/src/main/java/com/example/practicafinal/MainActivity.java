@@ -157,8 +157,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void clear(){
         TVpalabra.setText("");
-        for (int i = 0; i < numLetras; i++){
-            setVisibilityLetra(View.VISIBLE, btnList.get(i));
+        for (Button btn : btnList) {
+            setVisibilityLetra(View.VISIBLE, btn);
         }
     }
 
