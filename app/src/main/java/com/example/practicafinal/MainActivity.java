@@ -19,6 +19,9 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.practicafinal.data.DictionaryReader;
+import com.example.practicafinal.data.WordDictionary;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -66,6 +69,11 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
+
+        CarregarParaules();
+
+
+
         colour = Color.rgb(255, 100, 30);
 
         main = findViewById(R.id.main);
@@ -111,6 +119,15 @@ public class MainActivity extends AppCompatActivity {
 
         mostraMissatge("Bienvenido!");
     }
+
+
+    private void CarregarParaules() {
+        // Carregar paraules del joc
+        WordDictionary validDictionary = new DictionaryReader(getResources()).ReadValid();
+    }
+
+
+
 
     public void setVisibilityLetra(int mode, Button btn) {
         btn.setVisibility(mode);
