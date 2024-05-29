@@ -19,44 +19,35 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.practicafinal.data.DictionaryReader;
-import com.example.practicafinal.data.WordDictionary;
+import com.example.practicafinal.data.Partida;
+import com.example.practicafinal.data.Word;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 import java.util.Random;
+import java.util.stream.IntStream;
 
 public class MainActivity extends AppCompatActivity {
 
-    //region Llistes
-    // Llista de botons del cercle
-    private List<Button> btnList = new ArrayList<>();
-    // Llista de guidelines de la seccio de paraules
-    private List<Guideline> wordGuides = new ArrayList<>();
-    // Llista de arrays de TextViews per a les paraules ocultes
-    private List<TextView[]> hiddenWords = new ArrayList<>();
-    //endregion
 
     //region Variables
     private ConstraintLayout main;
-    private int colour;
-    private Button letra1;
-    private Button letra2;
-    private Button letra3;
-    private Button letra4;
-    private Button letra5;
-    private Button letra6;
-    private Button letra7;
+    private final int colour = Color.rgb(255, 100, 30);
 
-    private int totalParaules;
-
-    private int totalEncertades;
+    //region Llistes
+    // Llista de botons del cercle
+    private Button[] btnList;
+    // Llista de guidelines de la seccio de paraules
+    private Guideline[] wordGuides;
+    // Llista de arrays de TextViews per a les paraules ocultes
+    // Crear las filas de TextViews para las palabras ocultas para testear
+    private TextView[][] hiddenWords;
+    //endregion
 
     private TextView TVpalabra;
-
-    // Numero de letras de la partida
-    private int numLetras = 4;
     //endregion
+
+
+    private com.example.practicafinal.data.Partida Partida;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,81 +61,55 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        CarregarParaules();
-
-
-        colour = Color.rgb(255, 100, 30);
-
+        // region View initialization
         main = findViewById(R.id.main);
 
-        btnList.add(letra1 = findViewById(R.id.letra1));
-        btnList.add(letra2 = findViewById(R.id.letra2));
-        btnList.add(letra3 = findViewById(R.id.letra3));
-        btnList.add(letra4 = findViewById(R.id.letra4));
-        btnList.add(letra5 = findViewById(R.id.letra5));
-        btnList.add(letra6 = findViewById(R.id.letra6));
-        btnList.add(letra7 = findViewById(R.id.letra7));
+        wordGuides = new Guideline[]{
+                findViewById(R.id.topWordGuides),
+                findViewById(R.id.firstGuide),
+                findViewById(R.id.secondGuide),
+                findViewById(R.id.thirdGuide),
+                findViewById(R.id.fourthGuide),
+                findViewById(R.id.botWordsGuide)
+        };
 
-        // Llista de guies per la creacio del panel de paraules
-        wordGuides.add(findViewById(R.id.topWordGuides));
-        wordGuides.add(findViewById(R.id.firstGuide));
-        wordGuides.add(findViewById(R.id.secondGuide));
-        wordGuides.add(findViewById(R.id.thirdGuide));
-        wordGuides.add(findViewById(R.id.fourthGuide));
-        wordGuides.add(findViewById(R.id.botWordsGuide));
+        hiddenWords = new TextView[][]{
+                crearFilaTextViews(1, 3),
+                crearFilaTextViews(2, 4),
+                crearFilaTextViews(3, 5),
+                crearFilaTextViews(4, 6),
+                crearFilaTextViews(5, 7)
+        };
+
+        btnList = new Button[]{
+                findViewById(R.id.letra1),
+                findViewById(R.id.letra2),
+                findViewById(R.id.letra3),
+                findViewById(R.id.letra4),
+                findViewById(R.id.letra5),
+                findViewById(R.id.letra6),
+                findViewById(R.id.letra7)};
 
         TVpalabra = findViewById(R.id.TVpalabra);
+        //endregion
+
+        Partida = new Partida(getResources(), 4);
+
 
         // Escondemos los botones dentro del circulo
-        for (int i = 0; i < btnList.size(); i++) {
-            setVisibilityLetra(View.GONE, btnList.get(i));
+        for (Button value : btnList) {
+            setVisibilityLetra(View.GONE, value);
         }
 
-        for (int i = 0; i < btnList.size(); i++) {
-            setVisibilityLetra(View.VISIBLE, btnList.get(i));
+        for (Button button : btnList) {
+            setVisibilityLetra(View.VISIBLE, button);
         }
 
         // Vaciar texto del TextView
         TVpalabra.setText("");
         setColors();
 
-        // Crear las filas de TextViews para las palabras ocultas para testear
-        hiddenWords.add(crearFilaTextViews(1, 3));
-        hiddenWords.add(crearFilaTextViews(2, 4));
-        hiddenWords.add(crearFilaTextViews(3, 5));
-        hiddenWords.add(crearFilaTextViews(4, 6));
-        hiddenWords.add(crearFilaTextViews(5, 7));
-
-
         mostraMissatge("Bienvenido!");
-    }
-
-
-    private void CarregarParaules() {
-        // Carregar paraules del joc
-        WordDictionary validDictionary = new DictionaryReader(getResources()).ReadValid();
-    }
-
-
-    // Comprova si es pot crear `p2` a partir de les lletres de `p1`.
-    // Les repeticions son estrictes, es a dir, calen n repeticions d'una lletra en p1 per
-    // poder crear p2 que conte dita lletra n vegades.
-    public static boolean esParaulaSolucio(String p1, String p2) {
-        if (p1.length() < p2.length())
-            return false;
-
-        int[] contador = new int[26];
-        for (char c : p1.toCharArray()) {
-            contador[c - 'a']++;
-        }
-
-        for (char c : p2.toCharArray()) {
-            if (contador[c - 'a'] == 0)
-                return false;
-            contador[c - 'a']--;
-        }
-
-        return true;
     }
 
 
@@ -153,12 +118,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void sendBTN(View view) {
-        // De forma temporal este boton hara lo mismo que clear
+        String p = TVpalabra.getText().toString();
+        Partida.enviarParaula(p);
         clear();
     }
 
     public void clearBTN(View view) {
-        // Elimina el texto en el Text View palabra
+        // Elimina el texto en el Text View palabra y devuelve las letras al circulo
         clear();
     }
 
@@ -181,16 +147,28 @@ public class MainActivity extends AppCompatActivity {
     public void randomBTN(View view) {
         clear();
 
-        String[] aux = new String[numLetras];
-        for (int i = 0; i < numLetras; i++) {
-            Button b = btnList.get(i);
-            aux[i] = b.getText().toString();
-        }
-        randomize(aux, aux.length);
+        char[] aux = Partida.getLetrasRandom();
+        int[] btns = new int[aux.length];
 
-        for (int i = 0; i < numLetras; i++) {
-            Button b = btnList.get(i);
-            b.setText(aux[i]);
+        Random random = new Random();
+        int i = 0;
+        while (i < aux.length - 1) {
+            int num = random.nextInt(btnList.length - 1);
+            if (IntStream.of(btns).noneMatch(x -> x == num)) {
+                btns[i] = num;
+                i++;
+            }
+        }
+
+        for (int j = 0, k = 0; j < btnList.length; j++) {
+            int finalJ = j;
+            if (IntStream.of(btns).anyMatch(x -> x == finalJ) && k < aux.length) {
+                setVisibilityLetra(View.VISIBLE, btnList[j]);
+                btnList[j].setText(String.valueOf(aux[k++]));
+            }
+            else {
+                setVisibilityLetra(View.GONE, btnList[j]);
+            }
         }
 
     }
@@ -202,39 +180,17 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // Funcio de randomitzacio de Fisher-Yates per reordenar les lletres dels botons
-    public void randomize(String[] arr, int n) {
-        // Creating a object for Random class
-        Random r = new Random();
-
-        // Start from the last element and swap one by one. We don't
-        // need to run for the first element that's why i > 0
-        for (int i = n - 1; i > 0; i--) {
-
-            // Pick a random index from 0 to i
-            int j = r.nextInt(i + 1);
-
-            // Swap arr[i] with the element at random index
-            String temp = arr[i];
-            arr[i] = arr[j];
-            arr[j] = temp;
-        }
-    }
-
     // Quan s'implementi la logica del programa informara de quantes paraules s'han encertat i llistarles
     public void bonusBTN(View view) {
-        // Definicio de valors temporal, una vegada creada la logica del joc s'eliminaran aquestes linies
-        totalEncertades = 0;
-        totalParaules = 0;
-
-
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
+        Word[] bonus = Partida.getTrobadesBonus();
+
         // Titol del AlertDialog amb la progresio de paraules encertades
-        builder.setTitle("Encertades (" + totalEncertades + " de " + totalParaules + "):");
+        builder.setTitle("Encertades (" + bonus.length + " de " + com.example.practicafinal.data.Partida.ObjectiuBonus + "):");
 
         // Text del AlertDialog que mes endevant es cambiara per una llista ordenada alfabetiment de les paraules
-        builder.setMessage("INSERTAR LISTA DE PALABRAS ORDENADAS ALFABETICAMENTE");
+        builder.setMessage(String.join("\n", Arrays.stream(bonus).map(x -> x.Accentuada).toArray(String[]::new)));
 
         // Un boto Ok per tancar la finestra
         builder.setPositiveButton("OK", null);
@@ -330,8 +286,8 @@ public class MainActivity extends AppCompatActivity {
             }
 
             // Afegim el constraint vertical del TextView
-            constraintSet.connect(id, ConstraintSet.TOP, wordGuides.get(guia - 1).getId(), ConstraintSet.TOP, 5);
-            constraintSet.connect(id, ConstraintSet.BOTTOM, wordGuides.get(guia).getId(), ConstraintSet.TOP, 5);
+            constraintSet.connect(id, ConstraintSet.TOP, wordGuides[guia - 1].getId(), ConstraintSet.TOP, 5);
+            constraintSet.connect(id, ConstraintSet.BOTTOM, wordGuides[guia].getId(), ConstraintSet.TOP, 5);
 
             // Definim les dimensions
             constraintSet.constrainWidth(id, (int) width);
@@ -348,8 +304,8 @@ public class MainActivity extends AppCompatActivity {
 
     // Método para mostrar la palabra en una posición específica: P2
     private void mostraParaula(String s, int posicio) {
-        if (posicio >= 0 && posicio < hiddenWords.size()) {
-            TextView aux = hiddenWords.get(posicio)[0];
+        if (posicio >= 0 && posicio < hiddenWords.length) {
+            TextView aux = hiddenWords[posicio][0];
             aux.setText(s);
         } else {
             throw new IllegalArgumentException("Posición fuera de rango");

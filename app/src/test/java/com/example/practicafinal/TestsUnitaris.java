@@ -1,11 +1,11 @@
 package com.example.practicafinal;
 
-import static com.example.practicafinal.MainActivity.esParaulaSolucio;
+import static com.example.practicafinal.data.WordDictionary.esParaulaSolucio;
 
 import org.junit.Test;
 
 import static org.junit.Assert.*;
-import com.example.practicafinal.MainActivity;
+import com.example.practicafinal.data.WordDictionary;
 
 /**
  * Example local unit test, which will execute on the development machine (host).
