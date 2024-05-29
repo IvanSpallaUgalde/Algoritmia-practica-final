@@ -73,7 +73,6 @@ public class MainActivity extends AppCompatActivity {
         CarregarParaules();
 
 
-
         colour = Color.rgb(255, 100, 30);
 
         main = findViewById(R.id.main);
@@ -127,6 +126,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    // Comprova si es pot crear `p2` a partir de les lletres de `p1`.
+    // Les repeticions son estrictes, es a dir, calen n repeticions d'una lletra en p1 per
+    // poder crear p2 que conte dita lletra n vegades.
+    public static boolean esParaulaSolucio(String p1, String p2) {
+        if (p1.length() < p2.length())
+            return false;
+
+        int[] contador = new int[26];
+        for (char c : p1.toCharArray()) {
+            contador[c - 'a']++;
+        }
+
+        for (char c : p2.toCharArray()) {
+            if (contador[c - 'a'] == 0)
+                return false;
+            contador[c - 'a']--;
+        }
+
+        return true;
+    }
 
 
     public void setVisibilityLetra(int mode, Button btn) {
