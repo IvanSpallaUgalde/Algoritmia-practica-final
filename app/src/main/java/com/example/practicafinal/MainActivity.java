@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AlertDialog;
@@ -65,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        colour = Color.rgb(255,100,30);
+        colour = Color.rgb(255, 100, 30);
 
         main = findViewById(R.id.main);
 
@@ -88,11 +89,11 @@ public class MainActivity extends AppCompatActivity {
         TVpalabra = findViewById(R.id.TVpalabra);
 
         // Escondemos los botones dentro del circulo
-        for (int i = 0; i < btnList.size(); i++){
+        for (int i = 0; i < btnList.size(); i++) {
             setVisibilityLetra(View.GONE, btnList.get(i));
         }
 
-        for (int i = 0; i < btnList.size(); i++){
+        for (int i = 0; i < btnList.size(); i++) {
             setVisibilityLetra(View.VISIBLE, btnList.get(i));
         }
 
@@ -106,23 +107,26 @@ public class MainActivity extends AppCompatActivity {
         hiddenWords.add(crearFilaTextViews(3, 5));
         hiddenWords.add(crearFilaTextViews(4, 6));
         hiddenWords.add(crearFilaTextViews(5, 7));
+
+
+        mostraMissatge("Bienvenido!");
     }
 
-    public void setVisibilityLetra(int mode, Button btn){
+    public void setVisibilityLetra(int mode, Button btn) {
         btn.setVisibility(mode);
     }
 
-    public void sendBTN(View view){
+    public void sendBTN(View view) {
         // De forma temporal este boton hara lo mismo que clear
         clear();
     }
 
-    public void clearBTN(View view){
+    public void clearBTN(View view) {
         // Elimina el texto en el Text View palabra
         clear();
     }
 
-    public void setLletra(View view){
+    public void setLletra(View view) {
         // Obtener el boton pulsado
         Button btn = (Button) view;
 
@@ -138,24 +142,24 @@ public class MainActivity extends AppCompatActivity {
         setVisibilityLetra(View.GONE, btn);
     }
 
-    public void randomBTN(View view){
+    public void randomBTN(View view) {
         clear();
 
         String[] aux = new String[numLetras];
-        for (int i = 0; i < numLetras; i++){
+        for (int i = 0; i < numLetras; i++) {
             Button b = btnList.get(i);
             aux[i] = b.getText().toString();
         }
         randomize(aux, aux.length);
 
-        for (int i = 0; i < numLetras; i++){
+        for (int i = 0; i < numLetras; i++) {
             Button b = btnList.get(i);
             b.setText(aux[i]);
         }
 
     }
 
-    public void clear(){
+    public void clear() {
         TVpalabra.setText("");
         for (Button btn : btnList) {
             setVisibilityLetra(View.VISIBLE, btn);
@@ -163,16 +167,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // Funcio de randomitzacio de Fisher-Yates per reordenar les lletres dels botons
-    public void randomize(String[] arr, int n){
+    public void randomize(String[] arr, int n) {
         // Creating a object for Random class
         Random r = new Random();
 
         // Start from the last element and swap one by one. We don't
         // need to run for the first element that's why i > 0
-        for (int i = n-1; i > 0; i--) {
+        for (int i = n - 1; i > 0; i--) {
 
             // Pick a random index from 0 to i
-            int j = r.nextInt(i+1);
+            int j = r.nextInt(i + 1);
 
             // Swap arr[i] with the element at random index
             String temp = arr[i];
@@ -182,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // Quan s'implementi la logica del programa informara de quantes paraules s'han encertat i llistarles
-    public void bonusBTN(View view){
+    public void bonusBTN(View view) {
         // Definicio de valors temporal, una vegada creada la logica del joc s'eliminaran aquestes linies
         totalEncertades = 0;
         totalParaules = 0;
@@ -191,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         // Titol del AlertDialog amb la progresio de paraules encertades
-        builder.setTitle("Encertades ("+totalEncertades+" de "+totalParaules+"):");
+        builder.setTitle("Encertades (" + totalEncertades + " de " + totalParaules + "):");
 
         // Text del AlertDialog que mes endevant es cambiara per una llista ordenada alfabetiment de les paraules
         builder.setMessage("INSERTAR LISTA DE PALABRAS ORDENADAS ALFABETICAMENTE");
@@ -200,16 +204,16 @@ public class MainActivity extends AppCompatActivity {
         builder.setPositiveButton("OK", null);
 
         // Mostrar el AlertDialog per pantalla
-        AlertDialog dialog =  builder.create();
+        AlertDialog dialog = builder.create();
         dialog.show();
     }
 
-    public void setColors(){
+    public void setColors() {
         Button aux;
         ImageView circle = findViewById(R.id.circle);
     }
 
-    public void test(View view){
+    public void test(View view) {
         /*
         // Crear un array de TextViews
         TextView aux = new TextView(this);
@@ -235,7 +239,7 @@ public class MainActivity extends AppCompatActivity {
         */
     }
 
-    public TextView[] crearFilaTextViews(int guia, int lletres){
+    public TextView[] crearFilaTextViews(int guia, int lletres) {
         TextView[] linea = new TextView[lletres];
 
         // Obtenir les metriques de la pantalla
@@ -249,12 +253,12 @@ public class MainActivity extends AppCompatActivity {
 
         // Width TextView
         double width = scrHeight * 0.068;
-        double widthMargin = (scrWidth - (lletres*width))/2;
+        double widthMargin = (scrWidth - (lletres * width)) / 2;
 
         // Margin X
         int finalWMargin = (int) widthMargin;
 
-        for (int i = 0; i < linea.length; i++){
+        for (int i = 0; i < linea.length; i++) {
             // Crear el array de TextView
             TextView letter = new TextView(this);
 
@@ -280,17 +284,17 @@ public class MainActivity extends AppCompatActivity {
             ConstraintSet constraintSet = new ConstraintSet();
 
             // Afegim el constraint horizontals del TextView
-            if (i == 0){ // Pirmer TextView
+            if (i == 0) { // Pirmer TextView
                 constraintSet.connect(id, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START, finalWMargin);
-            } else if (i < linea.length-1){  // Qualsevol TextView menos el primer i el darrer
-                constraintSet.connect(id, ConstraintSet.START, linea[i-1].getId(), ConstraintSet.END, 0);
+            } else if (i < linea.length - 1) {  // Qualsevol TextView menos el primer i el darrer
+                constraintSet.connect(id, ConstraintSet.START, linea[i - 1].getId(), ConstraintSet.END, 0);
             } else { // Darrer TextView
-                constraintSet.connect(id, ConstraintSet.START, linea[i-1].getId(), ConstraintSet.END, 0);
+                constraintSet.connect(id, ConstraintSet.START, linea[i - 1].getId(), ConstraintSet.END, 0);
                 constraintSet.connect(id, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END, finalWMargin);
             }
 
             // Afegim el constraint vertical del TextView
-            constraintSet.connect(id, ConstraintSet.TOP, wordGuides.get(guia-1).getId(), ConstraintSet.TOP, 5);
+            constraintSet.connect(id, ConstraintSet.TOP, wordGuides.get(guia - 1).getId(), ConstraintSet.TOP, 5);
             constraintSet.connect(id, ConstraintSet.BOTTOM, wordGuides.get(guia).getId(), ConstraintSet.TOP, 5);
 
             // Definim les dimensions
@@ -308,7 +312,7 @@ public class MainActivity extends AppCompatActivity {
 
     // Método para mostrar la palabra en una posición específica: P2
     private void mostraParaula(String s, int posicio) {
-        if (posicio >= 0 && posicio < hiddenWords.size()){
+        if (posicio >= 0 && posicio < hiddenWords.size()) {
             TextView aux = hiddenWords.get(posicio)[0];
             aux.setText(s);
         } else {
@@ -327,4 +331,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     */
+
+
+    private void mostraMissatge(String s) {
+        mostraMissatge(s, false);
+    }
+
+    private void mostraMissatge(String s, boolean llarg) {
+        Toast.makeText(this, s, llarg ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT).show();
+    }
 }
