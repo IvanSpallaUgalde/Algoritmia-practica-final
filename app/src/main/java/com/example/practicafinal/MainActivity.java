@@ -116,9 +116,6 @@ public class MainActivity extends AppCompatActivity {
                 this::mostraParaulaComRepetida
         );
 
-
-        //setColors();
-
         mezclarBotones();
 
         clear();
@@ -219,6 +216,10 @@ public class MainActivity extends AppCompatActivity {
     private final DialogInterface.OnClickListener ExitApp = (dialog, which) -> {
         finish();
     };
+
+    public void reiniciar(View view){
+        startNewGame();
+    }
 
     private final DialogInterface.OnClickListener RestartGame = (dialog, which) -> {
         startNewGame();
