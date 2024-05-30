@@ -355,7 +355,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // Funcio per desactivar tots els elements menos restartBTN i bonusBTN
+    // Funcio per desactivar tots els elements menos restartBTN, bonusBTN i circle
     private void disableViews(){
         for (int i = 0; i < main.getChildCount(); i++) {
             View v = main.getChildAt(i);
