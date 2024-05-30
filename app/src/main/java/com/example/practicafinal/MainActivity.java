@@ -310,11 +310,6 @@ public class MainActivity extends AppCompatActivity {
         updateUi();
     }
 
-    public void setColors() {
-        Button aux;
-        ImageView circle = findViewById(R.id.circle);
-    }
-
     public TextView[] crearFilaTextViews(int guia, int lletres) {
         TextView[] linea = new TextView[lletres];
 
