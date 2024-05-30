@@ -1,12 +1,10 @@
 package com.example.practicafinal.data;
 
 import android.content.res.Resources;
-import android.location.GnssAntennaInfo;
 import android.util.Pair;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.EventListener;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Random;
@@ -26,12 +24,24 @@ public class Partida {
     public static final int MinimoLetras = 3;
     public static final int MaximoLetras = 7;
     private final ArrayList<Integer> redeemedTips = new ArrayList<>();
-    private Runnable BonusAction = () -> {};
-    private Runnable RepeatedBonusAction = () -> {};
+    private Runnable BonusAction = () -> {
+    };
+    private Runnable RepeatedBonusAction = () -> {
+    };
+    private PairAction TrobatAction = a -> {
+    };
+    private PairAction RepeatedTrobatAction = a -> {
+    };
 
-    public void setBonusActions(Runnable bonusAction, Runnable repeatedBonusAction) {
+    public interface PairAction {
+        void apply(Pair<Integer, Word> pair);
+    }
+
+    public void setActions(Runnable bonusAction, Runnable repeatedBonusAction, PairAction trobatAction, PairAction repeatedTrobatAction) {
         BonusAction = bonusAction;
         RepeatedBonusAction = repeatedBonusAction;
+        TrobatAction = trobatAction;
+        RepeatedTrobatAction = repeatedTrobatAction;
     }
 
     // Constructor
@@ -109,14 +119,21 @@ public class Partida {
             Pair<Integer, Word> w = candidat.get();
             Trobades.add(w);
             NoTrobades.remove(w);
-        } else if (Trobades.stream().noneMatch(w -> w.second.Raw.equals(paraula))) {
-            Optional<Word> match = Solucions.stream().filter(w -> w.Raw.equals(paraula)).findFirst();
-            if (match.isPresent()) {
-                if (TrobadesBonus.contains(match.get())) {
-                    RepeatedBonusAction.run();
-                } else {
-                    TrobadesBonus.add(match.get());
-                    BonusAction.run();
+            TrobatAction.apply(w);
+        } else {
+            Optional<Pair<Integer, Word>> jaTrobada = Trobades.stream().filter(w -> w.second.Raw.equals(paraula)).findFirst();
+
+            if (jaTrobada.isPresent()) {
+                RepeatedTrobatAction.apply(jaTrobada.get());
+            }else{
+                Optional<Word> match = Solucions.stream().filter(w -> w.Raw.equals(paraula)).findFirst();
+                if (match.isPresent()) {
+                    if (TrobadesBonus.contains(match.get())) {
+                        RepeatedBonusAction.run();
+                    } else {
+                        TrobadesBonus.add(match.get());
+                        BonusAction.run();
+                    }
                 }
             }
         }

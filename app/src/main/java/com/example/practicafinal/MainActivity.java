@@ -1,8 +1,6 @@
 package com.example.practicafinal;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.Application;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -30,6 +28,7 @@ import com.example.practicafinal.data.Word;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.Random;
+import java.util.function.UnaryOperator;
 import java.util.stream.IntStream;
 
 public class MainActivity extends AppCompatActivity {
@@ -110,10 +109,12 @@ public class MainActivity extends AppCompatActivity {
 
         Partida = new Partida(getResources(), 4);
 
-        Partida.setBonusActions(
+        Partida.setActions(
                 () -> mostraMissatge("Has trobat un bonus! Aconsegueix-ne " + com.example.practicafinal.data.Partida.ObjectiuBonus + " per conseguir una pista"),
-                () -> mostraMissatge("Ja has trobat aquest bonus abans!")
-                );
+                () -> mostraMissatge("Ja has trobat aquest bonus abans!"),
+                this::mostraParaula,
+                this::mostraParaulaComRepetida
+        );
 
 
         //setColors();
@@ -138,6 +139,16 @@ public class MainActivity extends AppCompatActivity {
         updateUi();
     }
 
+    private void mostraParaulaComRepetida(Pair<Integer, Word> pair) {
+        mostraParaula(pair);
+        if (pair.first >= 0 && pair.first < hiddenWords.length) {
+            for (int i = 0; i < pair.second.Accentuada.length(); i++) {
+                TextView aux = hiddenWords[pair.first][i];
+                aux.setTextColor(Color.RED);
+            }
+        }
+    }
+
 
     public void setVisibilityLetra(int mode, Button btn) {
         btn.setVisibility(mode);
@@ -145,23 +156,24 @@ public class MainActivity extends AppCompatActivity {
 
     public void sendBTN(View view) {
         String p = TVpalabra.getText().toString().toLowerCase();
+
+        // Resetear color de la palabra
+        for (TextView[] hiddenWord : hiddenWords) {
+            for (TextView textView : hiddenWord) {
+                textView.setTextColor(Color.BLACK);
+            }
+        }
+
         Partida.enviarParaula(p);
         updateUi();
 
         checkWin();
     }
 
-    // Actualitza les paraules trobades/no trobades, els bonus i la progresio
+    // Actualitza els bonus i la progresio. Les paraules s'actualitzen mitjançant events
     @SuppressLint("SetTextI18n")
     private void updateUi() {
         clear();
-
-        // Paraules trobades/no trobades
-        Pair<Integer, Word>[] Trobades = Partida.getTrobades();
-        for (Pair<Integer, Word> p : Trobades) {
-            mostraParaula(p);
-        }
-
 
         // Bonus
         int saldo = Partida.getTrobadesBonus().length - Partida.getPistesDonadesCount() * com.example.practicafinal.data.Partida.ObjectiuBonus;
@@ -382,6 +394,7 @@ public class MainActivity extends AppCompatActivity {
             for (int i = 0; i < val.second.Accentuada.length(); i++) {
                 TextView aux = hiddenWords[val.first][i];
                 aux.setText(String.valueOf(val.second.Accentuada.toUpperCase().charAt(i)));
+                aux.setTextColor(Color.BLACK);
             }
         } else {
             throw new IllegalArgumentException("Posición fuera de rango");
