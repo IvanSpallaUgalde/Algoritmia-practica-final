@@ -100,13 +100,14 @@ public class MainActivity extends AppCompatActivity {
         startNewGame();
 
         mostraMissatge("Benvingut al ZenWord!");
+
     }
 
     public void startNewGame() {
 
         Partida = new Partida(getResources(), 7);
 
-        setColors();
+        //setColors();
 
         mezclarBotones();
 
@@ -175,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
         Button btn = (Button) view;
 
         // Obtener texto del boton pulsado
-        String letra = btn.getText().toString();
+        String letra = btn.getText().toString().toUpperCase();
 
         // Añadir el texto
         TVpalabra.setText(TVpalabra.getText().toString() + letra);
@@ -258,32 +259,6 @@ public class MainActivity extends AppCompatActivity {
         ImageView circle = findViewById(R.id.circle);
     }
 
-    public void test(View view) {
-        /*
-        // Crear un array de TextViews
-        TextView aux = new TextView(this);
-        aux.setId(View.generateViewId());
-        aux.setTextColor(Color.BLACK);
-        aux.setText("A");
-        aux.setTextSize(40);
-        aux.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        aux.setBackgroundColor(colour);
-        aux.setVisibility(View.VISIBLE);
-
-        main.addView(aux);
-
-        ConstraintSet constraintSet = new ConstraintSet();
-        // Afegim el constraint vertical del TextView
-        constraintSet.connect(aux.getId(), ConstraintSet.TOP, wordGuides.get(1-1).getId(), ConstraintSet.TOP);
-        constraintSet.connect(aux.getId(), ConstraintSet.BOTTOM, wordGuides.get(1).getId(), ConstraintSet.TOP);
-
-        constraintSet.connect(aux.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START, 120);
-        constraintSet.connect(aux.getId(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END, 120);
-
-        constraintSet.applyTo(main);
-        */
-    }
-
     public TextView[] crearFilaTextViews(int guia, int lletres) {
         TextView[] linea = new TextView[lletres];
 
@@ -316,6 +291,8 @@ public class MainActivity extends AppCompatActivity {
             letter.setTextSize(38);
             letter.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
             letter.setTextColor(Color.BLACK);
+
+            // Afegir el bacground
             letter.setBackgroundResource(R.drawable.textview_border);
 
             // Afegir color (el mateix que el cercle)
@@ -378,7 +355,25 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // Funcio per desactivar tots els elements menos restartBTN i bonusBTN
+    private void disableViews(){
+        for (int i = 0; i < main.getChildCount(); i++) {
+            View v = main.getChildAt(i);
+            if (v.getId() != R.id.restartBTN && v.getId() != R.id.bonusBTN && v.getId() != R.id.circle){
+                v.setVisibility(View.GONE);
+                v.setEnabled(false);
+            }
+        }
+    }
 
+    // Funcio per activar tots els elements
+    private void enableViews(){
+        for (int i = 0; i < main.getChildCount(); i++) {
+            View v = main.getChildAt(i);
+            v.setVisibility(View.VISIBLE);
+            v.setEnabled(true);
+        }
+    }
 
     private void mostraMissatge(String s) {
         mostraMissatge(s, false);
