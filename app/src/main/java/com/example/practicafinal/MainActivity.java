@@ -36,7 +36,6 @@ public class MainActivity extends AppCompatActivity {
 
     //region Variables
     private ConstraintLayout main;
-    private final int colour = Color.rgb(255, 100, 30);
 
     //region Llistes
     // Llista de botons del cercle
@@ -157,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
         // Resetear color de la palabra
         for (TextView[] hiddenWord : hiddenWords) {
             for (TextView textView : hiddenWord) {
-                textView.setTextColor(Color.BLACK);
+                textView.setTextColor(Color.WHITE);
             }
         }
 
