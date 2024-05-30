@@ -181,13 +181,9 @@ public class MainActivity extends AppCompatActivity {
         else
             bonusBtn.setTextColor(Color.BLACK);
 
-
         // Progresio
-        String s = "Has encertat " + Partida.getTrobades().length + " de " + (Partida.getTrobades().length + Partida.getNoTrobades().length) + " possibles";
-        int bcount = Partida.getTrobadesBonus().length;
-        if (bcount > 0) {
-            s += " (+ " + bcount + " paraules bonus)";
-        }
+        String s = "Has encertat " + Partida.getTrobades().length + " de " + (Partida.getTrobades().length + Partida.getNoTrobades().length) + " possibles: " + Partida.getAllTrobades();
+
         progressText.setText(s);
     }
 

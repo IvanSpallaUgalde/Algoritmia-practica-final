@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Random;
+import java.util.TreeSet;
 
 public class Partida {
 
@@ -17,7 +18,8 @@ public class Partida {
     private final ArrayList<Pair<Integer, Word>> NoTrobades;
     private final HashSet<Pair<Integer, Word>> Trobades = new HashSet<>();
     private final HashSet<Word> Solucions = new HashSet<>();
-    private final HashSet<Word> TrobadesBonus = new HashSet<>();
+    private final TreeSet<Word> TrobadesBonus = new TreeSet<>();
+    private final TreeSet<Word> AllTrobades = new TreeSet<>();
 
     public static final int CantParaules = 5;
     public static final int ObjectiuBonus = 2;
@@ -65,9 +67,13 @@ public class Partida {
             Solucions.addAll(Arrays.asList(solucio));
         }
 
-
         // Agafam CantParaules
         NoTrobades = GenerarNoTrobades(solucionsPerLongitud);
+
+        // Debug in Logcat
+        for (Word word : Solucions){
+            System.out.println("SOLUCION: "+word.Raw);
+        }
     }
 
     private ArrayList<Pair<Integer, Word>> GenerarNoTrobades(Word[][] solucionsPerLongitud) {
@@ -118,6 +124,7 @@ public class Partida {
         if (candidat.isPresent()) {
             Pair<Integer, Word> w = candidat.get();
             Trobades.add(w);
+            AllTrobades.add(w.second); // Afegeix la paraula a la llista de totes les paraules trobades
             NoTrobades.remove(w);
             TrobatAction.apply(w);
         } else {
@@ -132,6 +139,7 @@ public class Partida {
                         RepeatedBonusAction.run();
                     } else {
                         TrobadesBonus.add(match.get());
+                        AllTrobades.add(match.get()); // Afegeix la paraula a la llista de totes les paraules trobades
                         BonusAction.run();
                     }
                 }
@@ -153,6 +161,13 @@ public class Partida {
         return TrobadesBonus.toArray(new Word[0]);
     }
 
+    public String getAllTrobades(){
+        String all = "";
+        for (Word w : AllTrobades){
+            all = all + w.Accentuada + ", ";
+        }
+        return all;
+    }
     public char[] getLetrasRandom() {
 
         return randomize(ParaulaSolucio);

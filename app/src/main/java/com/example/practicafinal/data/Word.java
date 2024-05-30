@@ -1,6 +1,6 @@
 package com.example.practicafinal.data;
 
-public class Word {
+public class Word implements Comparable<Word>{
     public String Accentuada;
     public String Raw;
 
@@ -11,5 +11,10 @@ public class Word {
 
     public int getLongitud() {
         return Raw.length();
+    }
+
+    @Override
+    public int compareTo(Word o) {
+        return Raw.compareTo(o.Raw);
     }
 }
