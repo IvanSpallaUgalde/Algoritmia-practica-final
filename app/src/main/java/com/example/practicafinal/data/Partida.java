@@ -23,7 +23,7 @@ public class Partida {
     public static final int ObjectiuBonus = 2;
     public static final int MinimoLetras = 3;
     public static final int MaximoLetras = 7;
-    public ArrayList<Integer> redeemedTips = new ArrayList<>();
+    private final ArrayList<Integer> redeemedTips = new ArrayList<>();
 
     // Constructor
     public Partida(Resources resources, int numLetrasMax) {
@@ -67,10 +67,19 @@ public class Partida {
         int maxAGenerar = Math.min(CantParaules, noTrobades.size() + limitInferior.length);
 
         while (noTrobades.size() < maxAGenerar) {
-            int index = -1;
+            int index;
             do {
                 index = r.nextInt(limitInferior.length);
-            } while (noTrobades.contains(limitInferior[index]));
+                boolean b = true;
+                for (Pair<Integer, Word> w : noTrobades) {
+                    if (w.second.equals(limitInferior[index])) {
+                        b = false;
+                        break;
+                    }
+                }
+                if (b)
+                    break;
+            } while (true);
 
             noTrobades.add(0, new Pair<>(0, limitInferior[index]));
         }
@@ -82,11 +91,6 @@ public class Partida {
         return noTrobades;
     }
 
-    // Getters i setters
-    public int getNumeroLetras() {
-        return numLetrasMax;
-    }
-
     // Logica
     public void enviarParaula(String paraula) {
 
@@ -96,7 +100,7 @@ public class Partida {
             Pair<Integer, Word> w = candidat.get();
             Trobades.add(w);
             NoTrobades.remove(w);
-        } else {
+        } else if (Trobades.stream().noneMatch(w -> w.second.Raw.equals(paraula))){
             Solucions.stream().filter(w -> w.Raw.equals(paraula)).findFirst().ifPresent(TrobadesBonus::add);
         }
     }
