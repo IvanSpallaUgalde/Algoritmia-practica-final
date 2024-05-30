@@ -11,8 +11,6 @@ import java.util.Random;
 
 public class Partida {
 
-    // Fields
-    private final WordDictionary Diccionari;
     private final String ParaulaSolucio;
 
     private final int numLetrasMax;
@@ -22,10 +20,10 @@ public class Partida {
     private final HashSet<Word> TrobadesBonus = new HashSet<>();
 
     public static final int CantParaules = 5;
-    public static final int ObjectiuBonus = 5;
+    public static final int ObjectiuBonus = 2;
     public static final int MinimoLetras = 3;
     public static final int MaximoLetras = 7;
-
+    public ArrayList<Integer> redeemedTips = new ArrayList<>();
 
     // Constructor
     public Partida(Resources resources, int numLetrasMax) {
@@ -34,12 +32,13 @@ public class Partida {
 
         this.numLetrasMax = numLetrasMax;
 
-        Diccionari = new DictionaryReader(resources).ReadValid();
+        // Fields
+        WordDictionary diccionari = new DictionaryReader(resources).ReadValid();
 
-        Word[] longitud = Diccionari.getLongitud(this.numLetrasMax);
+        Word[] longitud = diccionari.getLongitud(this.numLetrasMax);
         ParaulaSolucio = longitud[new Random().nextInt(longitud.length)].Raw;
 
-        Word[][] solucionsPerLongitud = Diccionari.getSolucions(numLetrasMax, ParaulaSolucio);
+        Word[][] solucionsPerLongitud = diccionari.getSolucions(numLetrasMax, ParaulaSolucio);
 
 
         for (int i = 1; i <= numLetrasMax; i++) {
@@ -56,7 +55,10 @@ public class Partida {
         ArrayList<Pair<Integer, Word>> noTrobades = new ArrayList<>();
         Random r = new Random();
         for (int i = numLetrasMax; i > MinimoLetras; i--) {
-            int index = r.nextInt(solucionsPerLongitud[i - 1].length);
+            int length = solucionsPerLongitud[i - 1].length;
+            if (length == 0)
+                continue;
+            int index = r.nextInt(length);
             noTrobades.add(0, new Pair<>(0, solucionsPerLongitud[i - 1][index]));
         }
 
@@ -145,4 +147,33 @@ public class Partida {
         return arr;
     }
 
+    public Optional<Pair<Integer, Word>> demanarPista() {
+
+        int bcount = getTrobadesBonus().length;
+
+        if (bcount < ObjectiuBonus)
+            return Optional.empty();
+
+        int pcount = redeemedTips.size();
+
+        if (bcount % ObjectiuBonus - pcount >= 0) {
+            Random r = new Random();
+
+
+            Pair<Integer, Word> pair;
+            do {
+                pair = NoTrobades.get(r.nextInt(NoTrobades.size()));
+            }
+            while (redeemedTips.contains(pair.first));
+
+            redeemedTips.add(pair.first);
+            return Optional.of(pair);
+        } else {
+            return Optional.empty();
+        }
+    }
+
+    public int getPistesDonadesCount() {
+        return redeemedTips.size();
+    }
 }

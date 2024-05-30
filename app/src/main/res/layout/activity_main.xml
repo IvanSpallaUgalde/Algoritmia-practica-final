@@ -44,7 +44,7 @@
         app:layout_constraintGuide_percent="0.85" />
 
     <TextView
-        android:id="@+id/palabras_partida"
+        android:id="@+id/progressText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/palabras_partida"
@@ -157,6 +157,7 @@
         android:layout_marginEnd="5dp"
         android:layout_marginBottom="5dp"
         android:background="@drawable/help"
+        android:onClick="pistaBtn"
         android:text="@string/help"
         app:layout_constraintBottom_toTopOf="@+id/guideline2"
         app:layout_constraintEnd_toEndOf="parent"

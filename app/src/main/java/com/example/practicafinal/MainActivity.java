@@ -25,6 +25,7 @@ import com.example.practicafinal.data.Partida;
 import com.example.practicafinal.data.Word;
 
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.Random;
 import java.util.stream.IntStream;
 
@@ -49,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView TVpalabra;
     private Button bonusBtn;
+    private TextView progressText;
 
     //endregion
 
@@ -91,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
 
         TVpalabra = findViewById(R.id.TVpalabra);
         bonusBtn = findViewById(R.id.bonusBTN);
+        progressText = findViewById(R.id.progressText);
 
         //endregion
 
@@ -101,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void startNewGame() {
 
-        Partida = new Partida(getResources(), 4);
+        Partida = new Partida(getResources(), 7);
 
         setColors();
 
@@ -115,6 +118,8 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < Partida.getNoTrobades().length; i++) {
             hiddenWords[i] = crearFilaTextViews(i + 1, Partida.getNoTrobades()[i].second.getLongitud());
         }
+
+        updateUi();
     }
 
 
@@ -129,22 +134,34 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // Actualitza les paraules trobades/no trobades, els bonus i la progresio
+    @SuppressLint("SetTextI18n")
     private void updateUi() {
         clear();
 
         // Paraules trobades/no trobades
         Pair<Integer, Word>[] Trobades = Partida.getTrobades();
         for (Pair<Integer, Word> p : Trobades) {
-            mostraParaula(p.second.Accentuada, p.first);
+            mostraParaula(p);
         }
 
 
         // Bonus
-        bonusBtn.setText(String.valueOf(Partida.getTrobadesBonus().length));
+        int saldo = Partida.getTrobadesBonus().length - Partida.getPistesDonadesCount() * com.example.practicafinal.data.Partida.ObjectiuBonus;
+        bonusBtn.setText(String.valueOf(saldo));
+
+        if (saldo >= com.example.practicafinal.data.Partida.ObjectiuBonus)
+            bonusBtn.setTextColor(Color.rgb(61, 145, 84));
+        else
+            bonusBtn.setTextColor(Color.BLACK);
 
 
         // Progresio
-
+        String s = "Has encertat " + Partida.getTrobades().length + " de " + (Partida.getTrobades().length + Partida.getNoTrobades().length) + " possibles";
+        int bcount = Partida.getTrobadesBonus().length;
+        if (bcount > 0){
+            s += " (+ " + bcount + " paraules bonus)";
+        }
+        progressText.setText(s);
     }
 
     public void clearBTN(View view) {
@@ -180,7 +197,7 @@ public class MainActivity extends AppCompatActivity {
         Random random = new Random();
         int i = 0;
         while (i < aux.length - 1) {
-            int num = random.nextInt(btnList.length - 1);
+            int num = random.nextInt(btnList.length);
             if (IntStream.of(visibleBtns).noneMatch(x -> x == num)) {
                 visibleBtns[i] = num;
                 i++;
@@ -211,7 +228,7 @@ public class MainActivity extends AppCompatActivity {
         Word[] bonus = Partida.getTrobadesBonus();
 
         // Titol del AlertDialog amb la progresio de paraules encertades
-        builder.setTitle("Encertades (" + bonus.length + " de " + com.example.practicafinal.data.Partida.ObjectiuBonus + "):");
+        builder.setTitle("Paraules bonus trobades:");
 
         // Text del AlertDialog que mes endevant es cambiara per una llista ordenada alfabetiment de les paraules
         builder.setMessage(String.join("\n", Arrays.stream(bonus).map(x -> x.Accentuada).toArray(String[]::new)));
@@ -224,6 +241,18 @@ public class MainActivity extends AppCompatActivity {
         dialog.show();
     }
 
+    public void pistaBtn(View view){
+        Optional<Pair<Integer, Word>> indexPista = Partida.demanarPista();
+
+        if(indexPista.isPresent()){
+            mostraPrimeraLletra(indexPista.get());
+        }
+        else{
+            mostraMissatge("No tens suficients bonus per demanar una pista");
+        }
+
+        updateUi();
+    }
     public void setColors() {
         Button aux;
         ImageView circle = findViewById(R.id.circle);
@@ -327,13 +356,11 @@ public class MainActivity extends AppCompatActivity {
 
 
     // Método para mostrar la palabra en una posición específica: P2
-    private void mostraParaula(String s, int posicio) {
-
-
-        if (posicio >= 0 && posicio < hiddenWords.length) {
-            for (int i = 0; i < s.length(); i++) {
-                TextView aux = hiddenWords[posicio][i];
-                aux.setText(String.valueOf(s.charAt(i)));
+    private void mostraParaula(Pair<Integer, Word> val) {
+        if (val.first >= 0 && val.first < hiddenWords.length) {
+            for (int i = 0; i < val.second.Accentuada.length(); i++) {
+                TextView aux = hiddenWords[val.first][i];
+                aux.setText(String.valueOf(val.second.Accentuada.charAt(i)));
             }
         } else {
             throw new IllegalArgumentException("Posición fuera de rango");
@@ -341,16 +368,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // Método para mostrar la primera letra en una posición específica
-    /*private void mostraPrimeraLletra(String s, int posicio) {
-        if (posicio >= 0 && posicio < hiddenWords.size()) {
-            char primeraLletra = Character.toLowerCase(s.charAt(0));
-            hiddenWords[posicio].setText(String.valueOf(primeraLletra));
+    private void mostraPrimeraLletra(Pair<Integer, Word> val) {
+        if (val.first >= 0 && val.first < hiddenWords.length) {
+            char primeraLletra = Character.toLowerCase(val.second.Accentuada.charAt(0));
+            hiddenWords[val.first][0].setText(String.valueOf(primeraLletra));
            // setVisibilityLetra(View.VISIBLE, primeraLletra; mejor en el botón ayuda donde se llama a este método
         } else {
             throw new IllegalArgumentException("Posición fuera de rango");
         }
     }
-    */
+
 
 
     private void mostraMissatge(String s) {
