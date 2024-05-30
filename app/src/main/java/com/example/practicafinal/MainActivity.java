@@ -110,6 +110,12 @@ public class MainActivity extends AppCompatActivity {
 
         Partida = new Partida(getResources(), 4);
 
+        Partida.setBonusActions(
+                () -> mostraMissatge("Has trobat un bonus! Aconsegueix-ne " + com.example.practicafinal.data.Partida.ObjectiuBonus + " per conseguir una pista"),
+                () -> mostraMissatge("Ja has trobat aquest bonus abans!")
+                );
+
+
         //setColors();
 
         mezclarBotones();
@@ -170,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
         // Progresio
         String s = "Has encertat " + Partida.getTrobades().length + " de " + (Partida.getTrobades().length + Partida.getNoTrobades().length) + " possibles";
         int bcount = Partida.getTrobadesBonus().length;
-        if (bcount > 0){
+        if (bcount > 0) {
             s += " (+ " + bcount + " paraules bonus)";
         }
         progressText.setText(s);
@@ -283,18 +289,18 @@ public class MainActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    public void pistaBtn(View view){
+    public void pistaBtn(View view) {
         Optional<Pair<Integer, Word>> indexPista = Partida.demanarPista();
 
-        if(indexPista.isPresent()){
+        if (indexPista.isPresent()) {
             mostraPrimeraLletra(indexPista.get());
-        }
-        else{
+        } else {
             mostraMissatge("No tens suficients bonus per demanar una pista");
         }
 
         updateUi();
     }
+
     public void setColors() {
         Button aux;
         ImageView circle = findViewById(R.id.circle);
@@ -386,18 +392,18 @@ public class MainActivity extends AppCompatActivity {
     private void mostraPrimeraLletra(Pair<Integer, Word> val) {
         if (val.first >= 0 && val.first < hiddenWords.length) {
             char primeraLletra = Character.toLowerCase(val.second.Accentuada.charAt(0));
-            hiddenWords[val.first][0].setText(String.valueOf(primeraLletra));
-           // setVisibilityLetra(View.VISIBLE, primeraLletra; mejor en el botón ayuda donde se llama a este método
+            hiddenWords[val.first][0].setText(String.valueOf(primeraLletra).toUpperCase());
+            // setVisibilityLetra(View.VISIBLE, primeraLletra; mejor en el botón ayuda donde se llama a este método
         } else {
             throw new IllegalArgumentException("Posición fuera de rango");
         }
     }
 
     // Funcio per desactivar tots els elements menos restartBTN, bonusBTN i circle
-    private void disableViews(){
+    private void disableViews() {
         for (int i = 0; i < main.getChildCount(); i++) {
             View v = main.getChildAt(i);
-            if (v.getId() != R.id.restartBTN && v.getId() != R.id.bonusBTN && v.getId() != R.id.circle){
+            if (v.getId() != R.id.restartBTN && v.getId() != R.id.bonusBTN && v.getId() != R.id.circle) {
                 v.setVisibility(View.GONE);
                 v.setEnabled(false);
             }
@@ -405,7 +411,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // Funcio per activar tots els elements
-    private void enableViews(){
+    private void enableViews() {
         for (int i = 0; i < main.getChildCount(); i++) {
             View v = main.getChildAt(i);
             v.setVisibility(View.VISIBLE);
