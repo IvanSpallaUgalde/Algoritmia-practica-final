@@ -162,11 +162,7 @@ public class Partida {
     }
 
     public String getAllTrobades(){
-        String all = "";
-        for (Word w : AllTrobades){
-            all = all + w.Accentuada + ", ";
-        }
-        return all;
+        return String.join(",", AllTrobades.stream().map(w -> w.Accentuada).toArray(String[]::new));
     }
     public char[] getLetrasRandom() {
 
