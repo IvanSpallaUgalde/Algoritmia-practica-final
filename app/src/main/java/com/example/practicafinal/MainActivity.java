@@ -1,6 +1,9 @@
 package com.example.practicafinal;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.Application;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -45,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
     private Guideline[] wordGuides;
     // Llista de arrays de TextViews per a les paraules ocultes
     // Crear las filas de TextViews para las palabras ocultas para testear
-    private TextView[][] hiddenWords;
+    private TextView[][] hiddenWords = new TextView[0][];
     //endregion
 
     private TextView TVpalabra;
@@ -104,13 +107,19 @@ public class MainActivity extends AppCompatActivity {
 
     public void startNewGame() {
 
-        Partida = new Partida(getResources(), 7);
+        Partida = new Partida(getResources(), 4);
 
         setColors();
 
         mezclarBotones();
 
         clear();
+
+        for (TextView[] hiddenWord : hiddenWords) {
+            for (TextView textView : hiddenWord) {
+                main.removeView(textView);
+            }
+        }
 
         hiddenWords = new TextView[Partida.getNoTrobades().length][];
 
@@ -131,6 +140,8 @@ public class MainActivity extends AppCompatActivity {
         String p = TVpalabra.getText().toString();
         Partida.enviarParaula(p);
         updateUi();
+
+        checkWin();
     }
 
     // Actualitza les paraules trobades/no trobades, els bonus i la progresio
@@ -163,6 +174,36 @@ public class MainActivity extends AppCompatActivity {
         }
         progressText.setText(s);
     }
+
+
+    private void checkWin() {
+        if (Partida.getNoTrobades().length == 0) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+            Word[] bonus = Partida.getTrobadesBonus();
+
+            // Titol del AlertDialog amb la progresio de paraules encertades
+            builder.setTitle("Has Guanyat!");
+
+            // Un boto de tancar la finestra
+            builder.setNegativeButton("Sortir", ExitApp);
+
+            // Un boto reiniciar per reiniciar la partida
+            builder.setPositiveButton("Reiniciar", RestartGame);
+
+            // Mostrar el AlertDialog per pantalla
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }
+    }
+
+    private final DialogInterface.OnClickListener ExitApp = (dialog, which) -> {
+        finish();
+    };
+
+    private final DialogInterface.OnClickListener RestartGame = (dialog, which) -> {
+        startNewGame();
+    };
 
     public void clearBTN(View view) {
         // Elimina el texto en el Text View palabra y devuelve las letras al circulo
@@ -292,9 +333,6 @@ public class MainActivity extends AppCompatActivity {
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
         int scrWidth = metrics.widthPixels;
         int scrHeight = metrics.heightPixels;
-
-        // Margin Y
-        double altura = scrHeight * 0.00293571;
 
         // Width TextView
         double width = scrHeight * 0.068;
