@@ -182,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
             bonusBtn.setTextColor(Color.BLACK);
 
         // Progresio
-        String s = "Has encertat " + Partida.getTrobades().length + " de " + (Partida.getTrobades().length + Partida.getNoTrobades().length) + " possibles: " + Partida.getAllTrobades();
+        String s = "Has encertat " + Partida.getTotalTrobades() + " de " + Partida.getTotalSoluciones() + " possibles: " + Partida.getAllTrobades();
 
         progressText.setText(s);
     }
@@ -285,10 +285,10 @@ public class MainActivity extends AppCompatActivity {
         Word[] bonus = Partida.getTrobadesBonus();
 
         // Titol del AlertDialog amb la progresio de paraules encertades
-        builder.setTitle("Paraules bonus trobades:");
+        builder.setTitle("Encertades ("+ Partida.getTotalTrobades() + " de "+ Partida.getTotalSoluciones() + ")");
 
         // Text del AlertDialog que mes endevant es cambiara per una llista ordenada alfabetiment de les paraules
-        builder.setMessage(String.join("\n", Arrays.stream(bonus).map(x -> x.Accentuada).toArray(String[]::new)));
+        builder.setMessage(Partida.getAllTrobades());
 
         // Un boto Ok per tancar la finestra
         builder.setPositiveButton("OK", null);

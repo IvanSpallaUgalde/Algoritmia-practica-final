@@ -72,7 +72,7 @@ public class Partida {
 
         // Debug in Logcat
         for (Word word : Solucions){
-            System.out.println("SOLUCION: "+word.Raw);
+            System.out.println("SOLUCION: "+word.Accentuada);
         }
     }
 
@@ -168,7 +168,12 @@ public class Partida {
 
         return randomize(ParaulaSolucio);
     }
-
+    public int getTotalSoluciones(){
+        return Solucions.size();
+    }
+    public int getTotalTrobades(){
+        return AllTrobades.size();
+    }
 
     // Funcio de randomitzacio de Fisher-Yates per reordenar les lletres dels botons
     private static char[] randomize(String str) {
