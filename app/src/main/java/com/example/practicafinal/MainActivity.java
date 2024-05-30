@@ -138,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void sendBTN(View view) {
-        String p = TVpalabra.getText().toString();
+        String p = TVpalabra.getText().toString().toLowerCase();
         Partida.enviarParaula(p);
         updateUi();
 
@@ -375,7 +375,7 @@ public class MainActivity extends AppCompatActivity {
         if (val.first >= 0 && val.first < hiddenWords.length) {
             for (int i = 0; i < val.second.Accentuada.length(); i++) {
                 TextView aux = hiddenWords[val.first][i];
-                aux.setText(String.valueOf(val.second.Accentuada.charAt(i)));
+                aux.setText(String.valueOf(val.second.Accentuada.toUpperCase().charAt(i)));
             }
         } else {
             throw new IllegalArgumentException("Posición fuera de rango");
