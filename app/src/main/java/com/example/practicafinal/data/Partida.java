@@ -1,6 +1,7 @@
 package com.example.practicafinal.data;
 
 import android.content.res.Resources;
+import android.util.Pair;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,8 +16,8 @@ public class Partida {
     private final String ParaulaSolucio;
 
     private final int numLetrasMax;
-    private final ArrayList<Word> NoTrobades;
-    private final HashSet<Word> Trobades = new HashSet<>();
+    private final ArrayList<Pair<Integer, Word>> NoTrobades;
+    private final HashSet<Pair<Integer, Word>> Trobades = new HashSet<>();
     private final HashSet<Word> Solucions = new HashSet<>();
     private final HashSet<Word> TrobadesBonus = new HashSet<>();
 
@@ -51,18 +52,29 @@ public class Partida {
         NoTrobades = GenerarNoTrobades(solucionsPerLongitud);
     }
 
-    private ArrayList<Word> GenerarNoTrobades(Word[][] solucionsPerLongitud) {
-        ArrayList<Word> noTrobades = new ArrayList<>();
+    private ArrayList<Pair<Integer, Word>> GenerarNoTrobades(Word[][] solucionsPerLongitud) {
+        ArrayList<Pair<Integer, Word>> noTrobades = new ArrayList<>();
         Random r = new Random();
-
         for (int i = numLetrasMax; i > MinimoLetras; i--) {
             int index = r.nextInt(solucionsPerLongitud[i - 1].length);
-            noTrobades.add(solucionsPerLongitud[i - 1][index]);
+            noTrobades.add(0, new Pair<>(0, solucionsPerLongitud[i - 1][index]));
         }
 
-        while (noTrobades.size() < CantParaules) {
-            Word[] limitInferior = solucionsPerLongitud[MinimoLetras - 1];// 3 - 1
-            noTrobades.add(limitInferior[r.nextInt(limitInferior.length)]);
+
+        Word[] limitInferior = solucionsPerLongitud[MinimoLetras - 1];// 3 - 1
+        int maxAGenerar = Math.min(CantParaules, noTrobades.size() + limitInferior.length);
+
+        while (noTrobades.size() < maxAGenerar) {
+            int index = -1;
+            do {
+                index = r.nextInt(limitInferior.length);
+            } while (noTrobades.contains(limitInferior[index]));
+
+            noTrobades.add(0, new Pair<>(0, limitInferior[index]));
+        }
+
+        for (int i = 0; i < noTrobades.size(); i++) {
+            noTrobades.set(i, new Pair<>(i, noTrobades.get(i).second));
         }
 
         return noTrobades;
@@ -76,10 +88,10 @@ public class Partida {
     // Logica
     public void enviarParaula(String paraula) {
 
-        Optional<Word> candidat = NoTrobades.stream().filter(w -> w.Raw.equals(paraula)).findFirst();
+        Optional<Pair<Integer, Word>> candidat = NoTrobades.stream().filter(w -> w.second.Raw.equals(paraula)).findFirst();
 
         if (candidat.isPresent()) {
-            Word w = candidat.get();
+            Pair<Integer, Word> w = candidat.get();
             Trobades.add(w);
             NoTrobades.remove(w);
         } else {
@@ -87,8 +99,14 @@ public class Partida {
         }
     }
 
-    public Word[] getTrobades() {
-        return Trobades.toArray(new Word[0]);
+    public Pair<Integer, Word>[] getTrobades() {
+        //noinspection unchecked
+        return (Pair<Integer, Word>[]) Trobades.toArray(new Pair[0]);
+    }
+
+    public Pair<Integer, Word>[] getNoTrobades() {
+        //noinspection unchecked
+        return (Pair<Integer, Word>[]) NoTrobades.toArray(new Pair[0]);
     }
 
     public Word[] getTrobadesBonus() {

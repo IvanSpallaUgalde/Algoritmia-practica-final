@@ -1,8 +1,10 @@
 package com.example.practicafinal;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -36,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
     //region Llistes
     // Llista de botons del cercle
     private Button[] btnList;
+    private int[] visibleBtns = {0, 1, 2, 3, 4, 5, 6};
+
     // Llista de guidelines de la seccio de paraules
     private Guideline[] wordGuides;
     // Llista de arrays de TextViews per a les paraules ocultes
@@ -44,6 +48,8 @@ public class MainActivity extends AppCompatActivity {
     //endregion
 
     private TextView TVpalabra;
+    private Button bonusBtn;
+
     //endregion
 
 
@@ -73,13 +79,6 @@ public class MainActivity extends AppCompatActivity {
                 findViewById(R.id.botWordsGuide)
         };
 
-        hiddenWords = new TextView[][]{
-                crearFilaTextViews(1, 3),
-                crearFilaTextViews(2, 4),
-                crearFilaTextViews(3, 5),
-                crearFilaTextViews(4, 6),
-                crearFilaTextViews(5, 7)
-        };
 
         btnList = new Button[]{
                 findViewById(R.id.letra1),
@@ -91,25 +90,31 @@ public class MainActivity extends AppCompatActivity {
                 findViewById(R.id.letra7)};
 
         TVpalabra = findViewById(R.id.TVpalabra);
+        bonusBtn = findViewById(R.id.bonusBTN);
+
         //endregion
+
+        startNewGame();
+
+        mostraMissatge("Benvingut al ZenWord!");
+    }
+
+    public void startNewGame() {
 
         Partida = new Partida(getResources(), 4);
 
-
-        // Escondemos los botones dentro del circulo
-        for (Button value : btnList) {
-            setVisibilityLetra(View.GONE, value);
-        }
-
-        for (Button button : btnList) {
-            setVisibilityLetra(View.VISIBLE, button);
-        }
-
-        // Vaciar texto del TextView
-        TVpalabra.setText("");
         setColors();
 
-        mostraMissatge("Bienvenido!");
+        mezclarBotones();
+
+        clear();
+
+        hiddenWords = new TextView[Partida.getNoTrobades().length][];
+
+        // Ordre revertit per que surtin aixi com demana la practica
+        for (int i = 0; i < Partida.getNoTrobades().length; i++) {
+            hiddenWords[i] = crearFilaTextViews(i + 1, Partida.getNoTrobades()[i].second.getLongitud());
+        }
     }
 
 
@@ -120,7 +125,26 @@ public class MainActivity extends AppCompatActivity {
     public void sendBTN(View view) {
         String p = TVpalabra.getText().toString();
         Partida.enviarParaula(p);
+        updateUi();
+    }
+
+    // Actualitza les paraules trobades/no trobades, els bonus i la progresio
+    private void updateUi() {
         clear();
+
+        // Paraules trobades/no trobades
+        Pair<Integer, Word>[] Trobades = Partida.getTrobades();
+        for (Pair<Integer, Word> p : Trobades) {
+            mostraParaula(p.second.Accentuada, p.first);
+        }
+
+
+        // Bonus
+        bonusBtn.setText(String.valueOf(Partida.getTrobadesBonus().length));
+
+
+        // Progresio
+
     }
 
     public void clearBTN(View view) {
@@ -128,6 +152,7 @@ public class MainActivity extends AppCompatActivity {
         clear();
     }
 
+    @SuppressLint("SetTextI18n")
     public void setLletra(View view) {
         // Obtener el boton pulsado
         Button btn = (Button) view;
@@ -136,48 +161,47 @@ public class MainActivity extends AppCompatActivity {
         String letra = btn.getText().toString();
 
         // Añadir el texto
-        StringBuilder sb = new StringBuilder(TVpalabra.getText().toString());
-        sb.append(letra);
-        TVpalabra.setText(sb.toString());
+        TVpalabra.setText(TVpalabra.getText().toString() + letra);
 
         // Hacer la letra no visible
         setVisibilityLetra(View.GONE, btn);
     }
 
     public void randomBTN(View view) {
-        clear();
+        clear(); // TODO: check si aixo s'ha de fer
 
+        mezclarBotones();
+    }
+
+    private void mezclarBotones() {
         char[] aux = Partida.getLetrasRandom();
-        int[] btns = new int[aux.length];
+        visibleBtns = new int[aux.length];
 
         Random random = new Random();
         int i = 0;
         while (i < aux.length - 1) {
             int num = random.nextInt(btnList.length - 1);
-            if (IntStream.of(btns).noneMatch(x -> x == num)) {
-                btns[i] = num;
+            if (IntStream.of(visibleBtns).noneMatch(x -> x == num)) {
+                visibleBtns[i] = num;
                 i++;
             }
         }
 
         for (int j = 0, k = 0; j < btnList.length; j++) {
             int finalJ = j;
-            if (IntStream.of(btns).anyMatch(x -> x == finalJ) && k < aux.length) {
+            if (IntStream.of(visibleBtns).anyMatch(x -> x == finalJ) && k < aux.length) {
                 setVisibilityLetra(View.VISIBLE, btnList[j]);
                 btnList[j].setText(String.valueOf(aux[k++]));
-            }
-            else {
+            } else {
                 setVisibilityLetra(View.GONE, btnList[j]);
             }
         }
-
     }
 
     public void clear() {
         TVpalabra.setText("");
-        for (Button btn : btnList) {
-            setVisibilityLetra(View.VISIBLE, btn);
-        }
+
+        Arrays.stream(visibleBtns).forEach(x -> setVisibilityLetra(View.VISIBLE, btnList[x]));
     }
 
     // Quan s'implementi la logica del programa informara de quantes paraules s'han encertat i llistarles
@@ -304,9 +328,13 @@ public class MainActivity extends AppCompatActivity {
 
     // Método para mostrar la palabra en una posición específica: P2
     private void mostraParaula(String s, int posicio) {
+
+
         if (posicio >= 0 && posicio < hiddenWords.length) {
-            TextView aux = hiddenWords[posicio][0];
-            aux.setText(s);
+            for (int i = 0; i < s.length(); i++) {
+                TextView aux = hiddenWords[posicio][i];
+                aux.setText(String.valueOf(s.charAt(i)));
+            }
         } else {
             throw new IllegalArgumentException("Posición fuera de rango");
         }
