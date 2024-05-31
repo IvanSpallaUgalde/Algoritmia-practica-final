@@ -117,7 +117,7 @@ public class Partida {
     }
 
     // Logica
-    public void enviarParaula(String paraula) {
+    public boolean enviarParaula(String paraula) {
 
         Optional<Pair<Integer, Word>> candidat = NoTrobades.stream().filter(w -> w.second.Raw.equals(paraula)).findFirst();
 
@@ -127,11 +127,13 @@ public class Partida {
             AllTrobades.add(w.second); // Afegeix la paraula a la llista de totes les paraules trobades
             NoTrobades.remove(w);
             TrobatAction.apply(w);
+            return true;
         } else {
             Optional<Pair<Integer, Word>> jaTrobada = Trobades.stream().filter(w -> w.second.Raw.equals(paraula)).findFirst();
 
             if (jaTrobada.isPresent()) {
                 RepeatedTrobatAction.apply(jaTrobada.get());
+                return true;
             }else{
                 Optional<Word> match = Solucions.stream().filter(w -> w.Raw.equals(paraula)).findFirst();
                 if (match.isPresent()) {
@@ -142,9 +144,13 @@ public class Partida {
                         AllTrobades.add(match.get()); // Afegeix la paraula a la llista de totes les paraules trobades
                         BonusAction.run();
                     }
+
+                    return true;
                 }
             }
         }
+
+        return false;
     }
 
     public Pair<Integer, Word>[] getTrobades() {
@@ -162,7 +168,7 @@ public class Partida {
     }
 
     public String getAllTrobades(){
-        return String.join(",", AllTrobades.stream().map(w -> w.Accentuada).toArray(String[]::new));
+        return String.join(", ", AllTrobades.stream().map(w -> w.Accentuada).toArray(String[]::new));
     }
     public char[] getLetrasRandom() {
 

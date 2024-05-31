@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.DisplayMetrics;
 import android.util.Pair;
 import android.view.View;
@@ -30,6 +31,8 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.function.UnaryOperator;
 import java.util.stream.IntStream;
+
+import kotlin.text.Regex;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -136,13 +139,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void mostraParaulaComRepetida(Pair<Integer, Word> pair) {
-        mostraParaula(pair);
-        if (pair.first >= 0 && pair.first < hiddenWords.length) {
-            for (int i = 0; i < pair.second.Accentuada.length(); i++) {
-                TextView aux = hiddenWords[pair.first][i];
-                aux.setTextColor(Color.RED);
-            }
-        }
+        updateUi();
+        String newString = progressText.getText().toString().replaceAll(" " + pair.second.Accentuada+ "([^A-Za-z]|$)", " <font color='red'>" + pair.second.Accentuada + "</font>$1");
+        progressText.setText(Html.fromHtml(newString));
     }
 
 
@@ -153,17 +152,9 @@ public class MainActivity extends AppCompatActivity {
     public void sendBTN(View view) {
         String p = TVpalabra.getText().toString().toLowerCase();
 
-        // Resetear color de la palabra
-        for (TextView[] hiddenWord : hiddenWords) {
-            for (TextView textView : hiddenWord) {
-                textView.setTextColor(Color.WHITE);
-            }
+        if (!Partida.enviarParaula(p)){
+            updateUi(); // No s'ha disparat res, fem accio manualment
         }
-
-        Partida.enviarParaula(p);
-        updateUi();
-
-        checkWin();
     }
 
     // Actualitza els bonus i la progresio. Les paraules s'actualitzen mitjançant events
@@ -390,6 +381,9 @@ public class MainActivity extends AppCompatActivity {
         } else {
             throw new IllegalArgumentException("Posición fuera de rango");
         }
+        updateUi();
+
+        checkWin();
     }
 
     // Método para mostrar la primera letra en una posición específica
