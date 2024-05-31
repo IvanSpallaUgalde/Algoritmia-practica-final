@@ -71,8 +71,8 @@ public class Partida {
         NoTrobades = GenerarNoTrobades(solucionsPerLongitud);
 
         // Debug in Logcat
-        for (Word word : Solucions){
-            System.out.println("SOLUCION: "+word.Accentuada);
+        for (Word word : Solucions) {
+            System.out.println("SOLUCION: " + word.Accentuada);
         }
     }
 
@@ -119,38 +119,50 @@ public class Partida {
     // Logica
     public boolean enviarParaula(String paraula) {
 
-        Optional<Pair<Integer, Word>> candidat = NoTrobades.stream().filter(w -> w.second.Raw.equals(paraula)).findFirst();
+        boolean result = false;
 
-        if (candidat.isPresent()) {
-            Pair<Integer, Word> w = candidat.get();
-            Trobades.add(w);
-            AllTrobades.add(w.second); // Afegeix la paraula a la llista de totes les paraules trobades
-            NoTrobades.remove(w);
-            TrobatAction.apply(w);
-            return true;
-        } else {
-            Optional<Pair<Integer, Word>> jaTrobada = Trobades.stream().filter(w -> w.second.Raw.equals(paraula)).findFirst();
+        HashSet<Pair<Integer, Word>> aux = new HashSet<>();
 
-            if (jaTrobada.isPresent()) {
-                RepeatedTrobatAction.apply(jaTrobada.get());
-                return true;
-            }else{
-                Optional<Word> match = Solucions.stream().filter(w -> w.Raw.equals(paraula)).findFirst();
-                if (match.isPresent()) {
-                    if (TrobadesBonus.contains(match.get())) {
-                        RepeatedBonusAction.run();
-                    } else {
-                        TrobadesBonus.add(match.get());
-                        AllTrobades.add(match.get()); // Afegeix la paraula a la llista de totes les paraules trobades
-                        BonusAction.run();
+        do {
+            Optional<Pair<Integer, Word>> candidat = NoTrobades.stream().filter(w -> w.second.Raw.equals(paraula)).findFirst();
+
+
+            if (candidat.isPresent()) {
+                Pair<Integer, Word> w = candidat.get();
+                AllTrobades.add(w.second); // Afegeix la paraula a la llista de totes les paraules trobades
+                Trobades.add(w);
+                NoTrobades.remove(w);
+                aux.add(w);
+                TrobatAction.apply(w);
+
+                result = true;
+                continue;
+            } else {
+                Optional<Pair<Integer, Word>> jaTrobada = Trobades.stream().filter(w -> !aux.contains(w) && w.second.Raw.equals(paraula)).findFirst();
+
+                if (jaTrobada.isPresent()) {
+                    RepeatedTrobatAction.apply(jaTrobada.get());
+                    result = true;
+                } else {
+                    Optional<Word> match = Solucions.stream().filter(w -> aux.stream().map(p -> p.second).noneMatch(w2 -> w2.Raw.equals(paraula)) && w.Raw.equals(paraula)).findFirst();
+                    if (match.isPresent()) {
+                        if (TrobadesBonus.contains(match.get())) {
+                            RepeatedBonusAction.run();
+                        } else {
+                            TrobadesBonus.add(match.get());
+                            AllTrobades.add(match.get()); // Afegeix la paraula a la llista de totes les paraules trobades
+                            BonusAction.run();
+                        }
+
+                        result = true;
                     }
-
-                    return true;
                 }
-            }
-        }
+                break;
 
-        return false;
+            }
+        } while (true);
+
+        return result;
     }
 
     public Pair<Integer, Word>[] getTrobades() {
@@ -167,17 +179,20 @@ public class Partida {
         return TrobadesBonus.toArray(new Word[0]);
     }
 
-    public String getAllTrobades(){
+    public String getAllTrobades() {
         return String.join(", ", AllTrobades.stream().map(w -> w.Accentuada).toArray(String[]::new));
     }
+
     public char[] getLetrasRandom() {
 
         return randomize(ParaulaSolucio);
     }
-    public int getTotalSoluciones(){
+
+    public int getTotalSoluciones() {
         return Solucions.size();
     }
-    public int getTotalTrobades(){
+
+    public int getTotalTrobades() {
         return AllTrobades.size();
     }
 

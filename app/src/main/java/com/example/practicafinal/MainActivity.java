@@ -112,8 +112,14 @@ public class MainActivity extends AppCompatActivity {
         Partida = new Partida(getResources(), 4);
 
         Partida.setActions(
-                () -> mostraMissatge("Has trobat un bonus! Aconsegueix-ne " + com.example.practicafinal.data.Partida.ObjectiuBonus + " per conseguir una pista"),
-                () -> mostraMissatge("Ja has trobat aquest bonus abans!"),
+                () -> {
+                    updateUi();
+                    mostraMissatge("Has trobat un bonus! Aconsegueix-ne " + com.example.practicafinal.data.Partida.ObjectiuBonus + " per conseguir una pista");
+                },
+                () -> {
+                    updateUi();
+                    mostraMissatge("Ja has trobat aquest bonus abans!");
+                },
                 this::mostraParaula,
                 this::mostraParaulaComRepetida
         );
