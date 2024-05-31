@@ -109,6 +109,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void startNewGame() {
 
+        enableViews();
+
         Partida = new Partida(getResources(), 4);
 
         Partida.setActions(
@@ -180,22 +182,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void checkWin() {
         if (Partida.getNoTrobades().length == 0) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-            Word[] bonus = Partida.getTrobadesBonus();
+            mostraMissatge("Has guanyat!");
 
-            // Titol del AlertDialog amb la progresio de paraules encertades
-            builder.setTitle("Has Guanyat!");
-
-            // Un boto de tancar la finestra
-            builder.setNegativeButton("Sortir", ExitApp);
-
-            // Un boto reiniciar per reiniciar la partida
-            builder.setPositiveButton("Reiniciar", RestartGame);
-
-            // Mostrar el AlertDialog per pantalla
-            AlertDialog dialog = builder.create();
-            dialog.show();
+            disableViews();
         }
     }
 
@@ -401,7 +391,7 @@ public class MainActivity extends AppCompatActivity {
     private void disableViews() {
         for (int i = 0; i < main.getChildCount(); i++) {
             View v = main.getChildAt(i);
-            if (v.getId() != R.id.restartBTN && v.getId() != R.id.bonusBTN && v.getId() != R.id.circle) {
+            if (v.getId() != R.id.restartBTN && v.getId() != R.id.bonusBTN && v.getId() != R.id.circle){
                 v.setVisibility(View.GONE);
                 v.setEnabled(false);
             }
